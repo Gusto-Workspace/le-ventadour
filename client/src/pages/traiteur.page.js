@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import InteriorLayout from "@/components/_shared/interior/interior-layout.component";
 import EditorialPhoto from "@/components/_shared/interior/editorial-photo.component";
 import QuoteForm from "@/components/traiteur/quote-form.component";
@@ -14,7 +15,7 @@ export default function TraiteurPage() {
           <h1 id="catering-page-title">L’art de recevoir,<br /><em>à votre manière.</em></h1>
           <span className="small-rule" />
           <p>Réceptions familiales, rendez-vous d’entreprise ou mariage&nbsp;: David Aranda imagine une prestation adaptée à votre événement, à vos envies et aux produits de saison.</p>
-          <a className="button button--rust" href="#devis">Parlons de votre projet <span>→</span></a>
+          <a className="button button--rust" href="#devis">Parlons de votre projet <span><ArrowIcon direction="right" size={22} /></span></a>
         </div>
         <div className="inside-intro-pair">
           <EditorialPhoto className="inside-intro-pair-main" src={homeAsset("traiteur-01")} alt="Bouchées préparées pour une réception" sizes="(max-width: 900px) 90vw, 42vw" />
@@ -25,7 +26,7 @@ export default function TraiteurPage() {
       <section className="catering-services page-container" aria-labelledby="services-title">
         <div className="catering-services-head"><p className="eyebrow interior-eyebrow">DES OCCASIONS, DES FORMULES</p><h2 id="services-title">Chaque événement<br /><em>a sa saveur.</em></h2></div>
         <div className="catering-services-list">
-          {cateringServices.map((service) => <a className="catering-service" href={service.href} key={service.number}><span>{service.number}</span><h3>{service.title}</h3><p>{service.detail}</p><i aria-hidden="true">↗</i></a>)}
+          {cateringServices.map((service) => <a className="catering-service" href={service.href} key={service.number}><span>{service.number}</span><h3>{service.title}</h3><p>{service.detail}</p><ArrowIcon size={38} strokeWidth={1} /></a>)}
         </div>
       </section>
 
@@ -38,7 +39,7 @@ export default function TraiteurPage() {
 
       <section id="mariage" className="wedding-section" aria-labelledby="wedding-title">
         <div className="wedding-section-inner page-container">
-          <div className="wedding-section-heading"><p className="eyebrow eyebrow--light">02 / MARIAGE</p><h2 id="wedding-title">Votre histoire,<br /><em>notre savoir-faire.</em></h2><p>Le cocktail, les ateliers, le repas et le service se construisent avec vous. Le Ventadour adapte sa formule à votre lieu, au nombre de convives et au déroulement de la journée.</p><Link href="#devis" className="button button--white">Demander une proposition <span>↗</span></Link></div>
+          <div className="wedding-section-heading"><p className="eyebrow eyebrow--light">02 / MARIAGE</p><h2 id="wedding-title">Votre histoire,<br /><em>notre savoir-faire.</em></h2><p>Le cocktail, les ateliers, le repas et le service se construisent avec vous. Le Ventadour adapte sa formule à votre lieu, au nombre de convives et au déroulement de la journée.</p><Link href="#devis" className="button button--white">Demander une proposition <span><ArrowIcon size={22} /></span></Link></div>
           <EditorialPhoto className="wedding-section-photo" label="Photo mariage" />
           <div className="wedding-moments">{weddingMoments.map((moment) => <div key={moment.number}><span>{moment.number}</span><h3>{moment.title}</h3><p>{moment.detail}</p></div>)}</div>
         </div>

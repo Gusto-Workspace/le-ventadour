@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 
 const subjects = [
   "Réservation",
@@ -45,7 +46,7 @@ export default function ContactForm() {
           <textarea id="contact-message" name="message" rows="3" placeholder="Votre message…" required />
         </div>
         <button className="button button--rust contact-form-submit" type="submit">
-          Envoyer ma demande <span aria-hidden="true">→</span>
+          Envoyer ma demande <span><ArrowIcon direction="right" size={22} /></span>
         </button>
         <p className="contact-form-required"><span>*</span> Champs obligatoires</p>
         <p className="contact-form-status" aria-live="polite">{message}</p>

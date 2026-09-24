@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
 
 export default function CateringHomeSection() {
@@ -10,7 +11,7 @@ export default function CateringHomeSection() {
           <p className="eyebrow catering-eyebrow">TRAITEUR</p>
           <h2 id="catering-title">Vos événements<br /><em>en bonne compagnie.</em></h2>
           <p>La même exigence et le même goût du détail, à vos côtés pour vos réceptions, réunions ou événements privés et professionnels.</p>
-          <Link href="/traiteur" className="button button--dark">Découvrir notre offre traiteur <span>↗</span></Link>
+          <Link href="/traiteur" className="button button--dark">Découvrir notre offre traiteur <span><ArrowIcon size={22} /></span></Link>
         </div>
         <div className="catering-first">
           <Image src={homeAsset("traiteur-01")} alt="Bouchées préparées pour une réception" fill sizes="(max-width: 900px) 90vw, 45vw" />

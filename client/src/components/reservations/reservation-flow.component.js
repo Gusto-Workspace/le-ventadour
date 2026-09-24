@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { getMockTimes } from "@/_assets/data/reservation-availability.mock";
 
 const steps = ["Disponibilités", "Vos informations", "Récapitulatif"];
@@ -98,7 +99,7 @@ export default function ReservationFlow() {
             disabled={visibleMonth <= currentMonth}
             onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() - 1, 1))}
           >
-            ←
+            <ArrowIcon direction="left" size={20} />
           </button>
           <h4 className="reservation-calendar-title">
             {formatDate(visibleMonth, { month: "long", year: "numeric" })}
@@ -108,7 +109,7 @@ export default function ReservationFlow() {
             aria-label="Afficher le mois suivant"
             onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1))}
           >
-            →
+            <ArrowIcon direction="right" size={20} />
           </button>
         </div>
         <div className="reservation-calendar-grid">
@@ -186,7 +187,7 @@ export default function ReservationFlow() {
 
           <div className="reservation-step-actions">
             {selectedDate && selectedTime ? <span>{formatDate(selectedDate, { weekday: "long", day: "numeric", month: "long" })} · {selectedTime}</span> : null}
-            <button type="button" className="button button--rust" disabled={!selectedDate || !selectedTime} onClick={() => setStep(2)}>Continuer <span aria-hidden="true">→</span></button>
+            <button type="button" className="button button--rust" disabled={!selectedDate || !selectedTime} onClick={() => setStep(2)}>Continuer <span><ArrowIcon direction="right" size={22} /></span></button>
           </div>
         </div>
       );
@@ -211,8 +212,8 @@ export default function ReservationFlow() {
             </label>
             {showValidation ? <p className="reservation-form-error" role="alert">Vérifiez les champs obligatoires et le format de votre adresse e-mail.</p> : null}
             <div className="reservation-step-actions">
-              <button type="button" className="reservation-back-link" onClick={() => setStep(1)}>← Modifier les disponibilités</button>
-              <button type="submit" className="button button--rust">Voir le récapitulatif <span aria-hidden="true">→</span></button>
+              <button type="button" className="reservation-back-link" onClick={() => setStep(1)}><ArrowIcon direction="left" size={16} /> Modifier les disponibilités</button>
+              <button type="submit" className="button button--rust">Voir le récapitulatif <span><ArrowIcon direction="right" size={22} /></span></button>
             </div>
           </form>
         </div>
@@ -235,10 +236,10 @@ export default function ReservationFlow() {
         </dl>
         <p className="reservation-preview-notice" role="status">Aucune réservation n’est envoyée ou enregistrée dans cet aperçu.</p>
         <div className="reservation-step-actions">
-          <button type="button" className="reservation-back-link" onClick={() => setStep(2)}>← Modifier mes coordonnées</button>
+          <button type="button" className="reservation-back-link" onClick={() => setStep(2)}><ArrowIcon direction="left" size={16} /> Modifier mes coordonnées</button>
           <button type="button" className="button button--rust" disabled title="La connexion au service de réservation sera ajoutée ultérieurement">Confirmation à venir</button>
         </div>
-        <button type="button" className="reservation-back-link" onClick={() => setStep(1)}>← Modifier mes disponibilités</button>
+        <button type="button" className="reservation-back-link" onClick={() => setStep(1)}><ArrowIcon direction="left" size={16} /> Modifier mes disponibilités</button>
         <button type="button" className="reservation-reset-link" onClick={() => { setStep(1); setSelectedDate(null); setSelectedTime(""); setGuests(2); setCustomer(emptyCustomer); setShowValidation(false); }}>Recommencer une demande</button>
       </div>
     );

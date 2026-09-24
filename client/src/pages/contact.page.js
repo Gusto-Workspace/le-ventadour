@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import InteriorLayout from "@/components/_shared/interior/interior-layout.component";
 import EditorialPhoto from "@/components/_shared/interior/editorial-photo.component";
 import ContactForm from "@/components/contact/contact-form.component";
@@ -29,7 +30,7 @@ export default function ContactPage() {
             <div className="contact-detail">
               <span>01 / ADRESSE</span>
               <p>{contact.address.line1}<br />{contact.address.zipCode} {contact.address.city}</p>
-              <a href="https://www.google.com/maps/search/?api=1&query=23+Quai+Villebourbon+82000+Montauban" target="_blank" rel="noreferrer">Voir l’itinéraire ↗</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=23+Quai+Villebourbon+82000+Montauban" target="_blank" rel="noreferrer">Voir l’itinéraire <ArrowIcon size={18} /></a>
             </div>
             <div className="contact-detail">
               <span>02 / TÉLÉPHONE</span>
@@ -47,9 +48,9 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="contact-visit page-container" aria-labelledby="visit-title"><EditorialPhoto className="contact-visit-photo" src={homeAsset("montauban-tarn")} alt="Le Tarn et le centre historique de Montauban" sizes="(max-width: 900px) 90vw, 55vw" /><div className="contact-visit-copy"><p className="eyebrow interior-eyebrow">CÔTÉ BISTROT</p><h2 id="visit-title">Le rendez-vous<br /><em>du déjeuner.</em></h2><p>Le restaurant vous accueille du lundi au vendredi, de 12h à 14h, pour le déjeuner. La carte évolue au rythme du marché.</p><p>Pour une réservation, contactez l’équipe au minimum la veille. Elle vous confirmera sa disponibilité.</p><Link className="button button--dark" href="/reservations">Préparer ma visite <span>↗</span></Link></div></section>
+      <section className="contact-visit page-container" aria-labelledby="visit-title"><EditorialPhoto className="contact-visit-photo" src={homeAsset("montauban-tarn")} alt="Le Tarn et le centre historique de Montauban" sizes="(max-width: 900px) 90vw, 55vw" /><div className="contact-visit-copy"><p className="eyebrow interior-eyebrow">CÔTÉ BISTROT</p><h2 id="visit-title">Le rendez-vous<br /><em>du déjeuner.</em></h2><p>Le restaurant vous accueille du lundi au vendredi, de 12h à 14h, pour le déjeuner. La carte évolue au rythme du marché.</p><p>Pour une réservation, contactez l’équipe au minimum la veille. Elle vous confirmera sa disponibilité.</p><Link className="button button--dark" href="/reservations">Préparer ma visite <span><ArrowIcon size={22} /></span></Link></div></section>
 
-      <section className="inside-outro" aria-labelledby="contact-outro-title"><div className="inside-outro-inner page-container"><div><p className="eyebrow eyebrow--light">CÔTÉ TRAITEUR</p><h2 id="contact-outro-title">Un événement<br /><em>en tête ?</em></h2></div><div><p>Cocktail, mariage ou réception professionnelle : racontez-nous votre projet et construisons ensemble une prestation qui vous ressemble.</p><Link href="/traiteur#devis" className="button button--white">Demander un devis <span>↗</span></Link></div></div></section>
+      <section className="inside-outro" aria-labelledby="contact-outro-title"><div className="inside-outro-inner page-container"><div><p className="eyebrow eyebrow--light">CÔTÉ TRAITEUR</p><h2 id="contact-outro-title">Un événement<br /><em>en tête ?</em></h2></div><div><p>Cocktail, mariage ou réception professionnelle : racontez-nous votre projet et construisons ensemble une prestation qui vous ressemble.</p><Link href="/traiteur#devis" className="button button--white">Demander un devis <span><ArrowIcon size={22} /></span></Link></div></div></section>
     </InteriorLayout>
   );
 }

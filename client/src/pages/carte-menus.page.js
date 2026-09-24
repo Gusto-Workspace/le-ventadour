@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import InteriorLayout from "@/components/_shared/interior/interior-layout.component";
 import EditorialPhoto from "@/components/_shared/interior/editorial-photo.component";
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
@@ -72,7 +73,7 @@ export default function CarteMenusPage() {
           <h1 id="menu-page-title">Le Ventadour<br /><em>côté Bistrot.</em></h1>
           <span className="small-rule" />
           <p>Une cuisine régionale, vivante et inventive, dessinée par le marché et servie dans la chaleur des voûtes de briques.</p>
-          <a className="button button--rust" href="#menu-bistrot">Découvrir les menus <span>→</span></a>
+          <a className="button button--rust" href="#menu-bistrot">Découvrir les menus <span><ArrowIcon direction="right" size={22} /></span></a>
         </div>
         <div className="editorial-arch-visual">
           <div className="editorial-photo editorial-arch-photo">
@@ -134,7 +135,7 @@ export default function CarteMenusPage() {
       <section className="inside-outro" aria-labelledby="menu-outro-title">
         <div className="inside-outro-inner page-container">
           <div><p className="eyebrow eyebrow--light">À TABLE</p><h2 id="menu-outro-title">À bientôt<br /><em>au Ventadour.</em></h2></div>
-          <div><p>Une question ou une envie particulière ? L’équipe du Ventadour se tient à votre écoute.</p><Link href="/reservations" className="button button--white">Réserver une table <span>↗</span></Link><Link href="/contact" className="inside-outro-link">Nous contacter ↗</Link></div>
+          <div><p>Une question ou une envie particulière ? L’équipe du Ventadour se tient à votre écoute.</p><Link href="/reservations" className="button button--white">Réserver une table <span><ArrowIcon size={22} /></span></Link><Link href="/contact" className="inside-outro-link">Nous contacter <ArrowIcon size={18} /></Link></div>
         </div>
       </section>
     </InteriorLayout>

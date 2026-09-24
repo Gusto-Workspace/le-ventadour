@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavComponent from "@/components/_shared/nav/nav.component";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
 
 export default function HeroHomeSection() {
@@ -14,7 +15,7 @@ export default function HeroHomeSection() {
           <span className="small-rule" />
           <p className="hero-intro">Au cœur d’un bâtiment du XVII<sup>e</sup> siècle,<br className="desktop-break" /> Le Ventadour cultive une cuisine vivante,<br className="desktop-break" /> inspirée par le marché et la région.</p>
           <div className="hero-actions">
-            <Link href="/reservations" className="button button--rust">Réserver une table <span>→</span></Link>
+            <Link href="/reservations" className="button button--rust">Réserver une table <span><ArrowIcon direction="right" size={22} /></span></Link>
             <a href="#cuisine" className="text-link">Découvrir notre cuisine</a>
           </div>
           <div className="hero-values" aria-label="Nos engagements">

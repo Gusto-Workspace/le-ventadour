@@ -1,4 +1,5 @@
 import { getRestaurantContact } from "@/_assets/utils/restaurant-contact.utils";
+import ArrowIcon from "@/components/_shared/arrow-icon.component";
 
 export default function QuoteForm() {
   const contact = getRestaurantContact();
@@ -38,7 +39,7 @@ export default function QuoteForm() {
         <label>Convives <input name="guests" type="number" min="1" /></label>
       </div>
       <label>Parlez-nous de votre projet <textarea name="message" rows="3" required /></label>
-      <div className="quote-form-bottom"><p>Votre application de messagerie ouvrira un courriel prérempli. Vous pourrez le relire avant de l’envoyer.</p><button className="button button--dark" type="submit">Envoyer <span>↗</span></button></div>
+      <div className="quote-form-bottom"><button className="button button--dark" type="submit">Envoyer <span><ArrowIcon size={22} /></span></button></div>
     </form>
   );
 }

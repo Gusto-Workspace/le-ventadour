@@ -126,6 +126,11 @@ blockquote {
   font-size: 22px;
   line-height: 0;
 }
+.site-arrow {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+}
 .button--rust {
   background: var(--rust);
   color: #fff;
@@ -956,7 +961,22 @@ blockquote {
   text-decoration: underline;
 }
 .footer-social {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   margin-top: 32px;
+}
+.footer-social a {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+}
+.footer-social svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .footer-bottom {
   display: flex;
@@ -1208,26 +1228,33 @@ blockquote {
     font-size: 15px;
   }
   .mobile-drawer .button {
-    width: 100%;
-  }
-  .mobile-drawer > p {
-    margin-top: auto;
-    color: #6b6058;
-    font-size: 13px;
-    line-height: 1.6;
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+    left: 25px;
+    width: auto;
+    margin: 0;
   }
   .hero-inner {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 45px;
-    padding-block: 48px 110px;
+    padding-block: 40px 75px;
+  }
+  .hero-eyebrow {
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+  }
+  .hero-eyebrow:after {
+    flex-basis: 35px;
   }
   .hero-copy {
     padding: 0;
   }
   .hero-copy h1 {
-    margin: 25px 0 25px;
+    margin: 35px 0 25px;
     font-size: clamp(63px, 13vw, 94px);
   }
   .hero-copy h1 em {
@@ -1251,11 +1278,15 @@ blockquote {
   }
   .hero-visual {
     align-self: auto;
-    margin: 0 35px 0 0;
+    width: 100%;
+    margin: 0;
     display: block;
   }
   .hero-arch {
     aspect-ratio: 0.93;
+  }
+  .hero-arch img {
+    object-position: center center;
   }
   .hero-aside {
     right: 0;
@@ -1286,7 +1317,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    padding-block: 110px 125px;
+    padding-block: 75px 85px;
   }
   .cuisine-side-note {
     order: 0;
@@ -1304,6 +1335,9 @@ blockquote {
     margin: 25px 0;
     font-size: clamp(58px, 11vw, 78px);
   }
+  .cuisine-copy h2 em br {
+    display: none;
+  }
   .cuisine-copy > p:not(.eyebrow) {
     font-size: 16px;
   }
@@ -1313,7 +1347,7 @@ blockquote {
   .cuisine-dessert {
     order: 3;
     width: 56%;
-    margin: 90px 0 0 auto;
+    margin: 90px auto 0;
     aspect-ratio: 0.82;
   }
   .cuisine blockquote {
@@ -1337,7 +1371,7 @@ blockquote {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 24px;
-    padding-block: 90px 160px;
+    padding-block: 65px 100px;
   }
   .story-intro {
     grid-column: 1 / -1;
@@ -1371,10 +1405,11 @@ blockquote {
     max-width: 520px;
   }
   .story-sign {
-    grid-column: 2;
+    grid-column: 1 / -1;
     grid-row: 4;
-    width: 100%;
-    margin: 80px 0 0;
+    width: 82%;
+    justify-self: center;
+    margin: 55px auto 0;
     aspect-ratio: 1;
   }
   .story-handwritten {
@@ -1391,7 +1426,7 @@ blockquote {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-block: 110px 120px;
+    padding-block: 75px 90px;
   }
   .catering-copy {
     padding: 0;
@@ -1423,7 +1458,7 @@ blockquote {
     height: 100px;
   }
   .catering-second {
-    width: 75%;
+    width: 100%;
     margin: 85px 0 0;
     aspect-ratio: 0.86;
   }
@@ -1453,7 +1488,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    padding-block: 75px 105px;
+    padding-block: 55px 75px;
   }
   .location-photo {
     width: calc(100% + 44px);
@@ -1472,6 +1507,9 @@ blockquote {
   .location-words {
     gap: 18px 45px;
     margin-top: 70px;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
   }
   .location-leaf {
     right: -80px;
@@ -1483,7 +1521,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 30px;
-    padding-block: 75px;
+    padding-block: 55px;
   }
   .rendezvous h2 {
     font-size: clamp(55px, 10vw, 75px);
@@ -1498,10 +1536,12 @@ blockquote {
     grid-template-columns: 1fr 1fr;
     gap: 45px 20px;
     padding-block: 70px 55px;
+    justify-items: center;
+    text-align: center;
   }
   .footer-main .brand {
     grid-column: 1 / -1;
-    justify-self: start;
+    justify-self: center;
   }
   .footer-address,
   .footer-contact {
@@ -1509,8 +1549,10 @@ blockquote {
   }
   .footer-bottom {
     flex-direction: column;
+    align-items: center;
     gap: 12px;
     font-size: 11px;
+    text-align: center;
   }
 }
 @media (min-width: 761px) and (max-width: 900px) {
@@ -2213,10 +2255,10 @@ blockquote {
 .inside-intro--catering {
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(50px, 6.5vw, 110px);
-  padding-block: clamp(44px, 4.2vw, 66px) clamp(70px, 6.2vw, 96px);
+  padding-block: 75px clamp(70px, 6.2vw, 96px);
 }
 .inside-intro--catering .inside-intro-copy h1 {
-  margin: 30px 0 32px;
+  margin: 35px 0 34px;
   font-size: clamp(66px, 6.1vw, 104px);
   line-height: 0.9;
 }
@@ -2333,14 +2375,13 @@ blockquote {
   font-size: 15px;
   line-height: 1.6;
 }
-.catering-service i {
+.catering-service svg {
   color: var(--rust);
-  font-family: var(--serif);
-  font-size: 30px;
-  font-style: normal;
+  width: 38px;
+  height: 38px;
   transition: transform 0.2s ease;
 }
-.catering-service:hover i {
+.catering-service:hover svg {
   transform: translate(4px, -4px);
 }
 .cocktail-section {
@@ -2768,8 +2809,8 @@ blockquote {
   z-index: 1;
   padding-block: clamp(85px, 10vw, 140px);
 }
-.reservation-hero-copy .hero-eyebrow {
-  margin-bottom: 34px;
+.reservation-hero-copy .interior-eyebrow {
+  margin-bottom: 35px;
 }
 .reservation-hero-copy h1 {
   max-width: 740px;
@@ -2944,6 +2985,8 @@ blockquote {
   padding-bottom: 14px;
 }
 .reservation-calendar-heading button {
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
   border: 0;
@@ -3052,6 +3095,11 @@ blockquote {
   font-family: var(--serif);
   font-size: 15px;
   cursor: pointer;
+}
+.reservation-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .reservation-summary {
   border-top: 1px solid var(--rust);
@@ -3317,7 +3365,7 @@ blockquote {
     grid-column: 2;
     grid-row: 2;
   }
-  .catering-service i {
+  .catering-service svg {
     grid-column: 3;
     grid-row: 1;
   }
@@ -3479,12 +3527,13 @@ blockquote {
   }
   .menu-philosophy-photo {
     width: 105%;
-    align-self: flex-end;
+    align-self: center;
     aspect-ratio: 1.17;
   }
   .menu-philosophy-side {
     position: static;
     font-size: 9px;
+    justify-content: center;
   }
   .printed-menu-inner {
     gap: 55px;
@@ -3565,6 +3614,9 @@ blockquote {
     display: block;
     margin-bottom: 45px;
   }
+  .catering-services h2 em {
+    text-align: left;
+  }
   .catering-service {
     gap: 8px 10px;
     padding-block: 24px;
@@ -3580,7 +3632,8 @@ blockquote {
     padding-block: 90px;
   }
   .cocktail-section-photo {
-    width: 85%;
+    width: 100%;
+    margin-inline: 0;
   }
   .wedding-section-photo {
     width: 80%;
@@ -3642,7 +3695,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
-    padding-top: 25px;
+    padding-top: 45px;
   }
   .reservation-hero-image {
     position: relative;
@@ -3651,8 +3704,7 @@ blockquote {
     margin-top: 24px;
   }
   .reservation-hero-image img { object-position: 74% center; }
-  .reservation-hero-copy { padding-block: 32px 0; }
-  .reservation-hero-copy .hero-eyebrow { margin-bottom: 22px; }
+  .reservation-hero-copy { padding-block: 80px 0; }
   .reservation-hero-copy h1 { font-size: clamp(58px, 13vw, 82px); }
   .reservation-hero-copy .small-rule { margin: 26px 0 17px; }
   .reservation-hero-copy > p:not(.eyebrow) { max-width: 440px; font-size: 17px; }
@@ -3661,16 +3713,18 @@ blockquote {
   .reservation-flow-heading { display: block; margin-bottom: 44px; }
   .reservation-flow-heading .eyebrow { margin-bottom: 15px; }
   .reservation-flow-heading h2 { font-size: clamp(52px, 12vw, 72px); }
-  .reservation-flow-heading > p:last-child { margin-top: 18px; font-size: 17px; }
+  .reservation-flow-heading > p:last-child { margin-top: 18px; font-size: 17px; text-align: left; }
   .reservation-flow-layout { grid-template-columns: 1fr; gap: 34px; padding-top: 26px; }
   .reservation-progress,
   .reservation-step-panel,
   .reservation-summary { grid-column: 1; grid-row: auto; }
   .reservation-progress > .eyebrow { margin-bottom: 12px; }
-  .reservation-progress ol { gap: 5px; }
-  .reservation-progress button { grid-template-columns: 28px 1fr; min-height: 43px; padding-block: 6px; }
+  .reservation-progress ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .reservation-progress li,
+  .reservation-progress li:last-child { min-width: 0; border-bottom: 0; }
+  .reservation-progress button { grid-template-columns: 1fr; align-content: start; gap: 6px; min-height: 62px; padding: 8px 5px; }
   .reservation-progress-number { font-size: 9px; }
-  .reservation-progress-label { font-size: 14px; }
+  .reservation-progress-label { font-size: 14px; line-height: 1.15; overflow-wrap: anywhere; }
   .reservation-step-content h3 { font-size: clamp(36px, 9vw, 48px); }
   .reservation-step-help { margin-bottom: 25px; font-size: 16px; }
   .reservation-calendar-heading { margin-bottom: 10px; }
