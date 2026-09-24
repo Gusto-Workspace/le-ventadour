@@ -1,6 +1,7 @@
 import Image from "next/image";
 import InteriorLayout from "@/components/_shared/interior/interior-layout.component";
 import ReservationFlow from "@/components/reservations/reservation-flow.component";
+import RendezvousHomeSection from "@/components/home/sections/rendezvous.home.section";
 
 export default function ReservationsPage() {
   return (
@@ -13,12 +14,13 @@ export default function ReservationsPage() {
           <p className="eyebrow hero-eyebrow">RÉSERVER UNE TABLE</p>
           <h1 id="booking-title">On se retrouve<br /><em>à table ?</em></h1>
           <span className="small-rule" />
-          <p>Pour le déjeuner, l’équipe du Ventadour vous accueille du lundi au vendredi, de 12h à 14h. Contactez-nous pour connaître les disponibilités et recevoir une confirmation.</p>
+          <p>Pour un moment à partager ou une occasion particulière, choisissez la date et l’horaire qui vous conviennent.</p>
           <a className="button button--rust" href="#reservation">Choisir une date <span aria-hidden="true">↓</span></a>
         </div>
       </section>
 
       <ReservationFlow />
+      <RendezvousHomeSection href="/contact" buttonText="Nous contacter" />
     </InteriorLayout>
   );
 }
