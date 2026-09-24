@@ -1240,7 +1240,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 45px;
-    padding-block: 40px 75px;
+    padding-block: 20px 37.5px;
   }
   .hero-eyebrow {
     gap: 10px;
@@ -1317,7 +1317,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    padding-block: 75px 85px;
+    padding-block: 37.5px 42.5px;
   }
   .cuisine-side-note {
     order: 0;
@@ -1371,7 +1371,7 @@ blockquote {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 24px;
-    padding-block: 65px 100px;
+    padding-block: 32.5px 50px;
   }
   .story-intro {
     grid-column: 1 / -1;
@@ -1426,7 +1426,7 @@ blockquote {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-block: 75px 90px;
+    padding-block: 37.5px 45px;
   }
   .catering-copy {
     padding: 0;
@@ -1488,7 +1488,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    padding-block: 55px 75px;
+    padding-block: 27.5px 37.5px;
   }
   .location-photo {
     width: calc(100% + 44px);
@@ -1521,7 +1521,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 30px;
-    padding-block: 55px;
+    padding-block: 27.5px;
   }
   .rendezvous h2 {
     font-size: clamp(55px, 10vw, 75px);
@@ -3438,7 +3438,10 @@ blockquote {
   .inside-intro,
   .inside-intro--catering {
     gap: 45px;
-    padding-block: 40px 85px;
+    padding-block: 20px 42.5px;
+  }
+  .inside-intro--catering {
+    padding-block: 20px 42.5px;
   }
   .inside-intro-copy h1,
   .inside-intro--catering .inside-intro-copy h1,
@@ -3486,7 +3489,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     gap: 60px;
-    padding-block: 85px 95px;
+    padding-block: 42.5px 47.5px;
   }
   .chef-editorial-photo {
     width: 75%;
@@ -3516,7 +3519,7 @@ blockquote {
   .catering-services,
   .professionals-section,
   .contact-visit {
-    padding-block: 90px;
+    padding-block: 45px;
   }
   .menu-philosophy-body {
     display: flex;
@@ -3537,7 +3540,7 @@ blockquote {
   }
   .printed-menu-inner {
     gap: 55px;
-    padding-block: 90px;
+    padding-block: 45px;
   }
   .printed-menu-heading h2 {
     font-size: 70px;
@@ -3600,7 +3603,7 @@ blockquote {
   .inside-outro-inner {
     grid-template-columns: 1fr;
     gap: 35px;
-    padding-block: 80px;
+    padding-block: 40px;
   }
   .inside-outro h2 {
     font-size: 68px;
@@ -3613,6 +3616,9 @@ blockquote {
   .catering-services-head {
     display: block;
     margin-bottom: 45px;
+  }
+  .catering-services {
+    padding-block: 45px;
   }
   .catering-services h2 em {
     text-align: left;
@@ -3629,7 +3635,7 @@ blockquote {
   }
   .cocktail-section-inner,
   .wedding-section-inner {
-    padding-block: 90px;
+    padding-block: 45px;
   }
   .cocktail-section-photo {
     width: 100%;
@@ -3648,8 +3654,11 @@ blockquote {
   .professionals-photo {
     width: 85%;
   }
+  .professionals-section {
+    padding-block: 45px;
+  }
   .quote-section-inner {
-    padding-block: 90px;
+    padding-block: 45px;
   }
   .quote-form-row,
   .quote-form-row--three {
@@ -3662,7 +3671,7 @@ blockquote {
   .contact-details-inner {
     grid-template-columns: 1fr;
     gap: 45px;
-    padding-block: 85px;
+    padding-block: 42.5px;
   }
   .contact-details-intro h2 {
     font-size: clamp(52px, 10vw, 74px);
@@ -3695,7 +3704,7 @@ blockquote {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
-    padding-top: 45px;
+    padding-top: 22.5px;
   }
   .reservation-hero-image {
     position: relative;
@@ -3704,12 +3713,12 @@ blockquote {
     margin-top: 24px;
   }
   .reservation-hero-image img { object-position: 74% center; }
-  .reservation-hero-copy { padding-block: 80px 0; }
+  .reservation-hero-copy { padding-block: 40px 0; margin-top: 42.5px; }
   .reservation-hero-copy h1 { font-size: clamp(58px, 13vw, 82px); }
   .reservation-hero-copy .small-rule { margin: 26px 0 17px; }
   .reservation-hero-copy > p:not(.eyebrow) { max-width: 440px; font-size: 17px; }
   .reservation-hero-copy .button { margin-top: 22px; }
-  .reservation-flow { padding-block: 78px 95px; }
+  .reservation-flow { padding-block: 39px 47.5px; }
   .reservation-flow-heading { display: block; margin-bottom: 44px; }
   .reservation-flow-heading .eyebrow { margin-bottom: 15px; }
   .reservation-flow-heading h2 { font-size: clamp(52px, 12vw, 72px); }
@@ -3795,7 +3804,7 @@ blockquote {
 @media (max-width: 600px) {
   .menu-template-inner {
     gap: 55px;
-    padding-block: 90px;
+    padding-block: 45px;
   }
   .printed-menu-photo-wrap {
     width: 88%;
