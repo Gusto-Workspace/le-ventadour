@@ -10,7 +10,7 @@ const motionRules = [
   [".editorial-arch-leaves, .hero-leaf, .story-leaf, .cuisine-leaf, .location-leaf, .printed-menu-leaf", "botanical"],
   [".editorial-photo, .hero-arch, .cuisine-fish, .cuisine-dessert, .story-chef, .story-sign, .location-photo, .reservation-hero-image, .ventadour-news-image", "image"],
   [".quote-form, .contact-details-form", "form"],
-  [".hero-copy, .hero-intro, .hero-actions, .hero-values, .hero-visual, .hero-aside, .cuisine-copy, .story-intro, .story-copy, .location-copy, .inside-intro-copy, .menu-philosophy-head, .menu-philosophy-body, .chef-editorial-copy, .catering-services-head, .cocktail-section-copy, .wedding-section-heading, .professionals-copy, .quote-section-intro, .contact-details-intro, .contact-detail-list, .contact-visit-copy, .ventadour-news-copy, .reservation-hero-copy, .reservation-flow-heading, .reservation-progress, .reservation-summary, .inside-outro-inner, .footer-main, .footer-bottom", "copy"],
+  [".hero-copy, .hero-intro, .hero-actions, .hero-values, .hero-visual, .hero-aside, .cuisine-copy, .story-intro, .story-copy, .location-copy, .inside-intro-copy, .menu-philosophy-head, .menu-philosophy-body, .chef-editorial-copy, .catering-services-head, .cocktail-section-copy, .wedding-section-heading, .professionals-copy, .quote-section-intro, .contact-details-intro, .contact-detail-list, .contact-visit-copy, .ventadour-news-copy, .reservation-hero-copy, .reservation-flow-heading, .reservation-progress, .reservation-summary, .inside-outro-inner", "copy"],
   [".hero-value, .catering-service, .editorial-list li, .wedding-moments > div, .menu-template-course, .a-la-carte-group, .ventadour-news-entry", "stagger"],
   [".reservation-step-content", "step"],
 ];

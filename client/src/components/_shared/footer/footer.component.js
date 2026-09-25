@@ -13,11 +13,11 @@ export default function FooterComponent({ contact }) {
     <footer className="site-footer">
       <div className="footer-main page-container">
         <BrandComponent footer />
-        <div className="footer-address">
-          {addressLines.length ? <p>{addressLines.map((line) => <span key={line}>{line}<br /></span>)}</p> : null}
-          {hours.length ? <p>{hours.map((item) => <span key={item.label}>{item.label}<br />{item.value}<br /></span>)}</p> : null}
-        </div>
         <div className="footer-contact">
+          {(addressLines.length || hours.length) && <div className="footer-address">
+            {addressLines.length ? <p>{addressLines.map((line) => <span key={line}>{line}<br /></span>)}</p> : null}
+            {hours.length ? <p>{hours.map((item) => <span key={item.label}>{item.label}<br />{item.value}<br /></span>)}</p> : null}
+          </div>}
           {contact.phone && <a href={`tel:${telephone}`}>{contact.phone}</a>}
           {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
           <div className="footer-social">
@@ -31,7 +31,7 @@ export default function FooterComponent({ contact }) {
         </div>
       </div>
       <div className="footer-bottom page-container">
-        <span>© {new Date().getFullYear()} {contact.name || "Le Ventadour"} – Tous droits réservés.</span>
+        <span>© {new Date().getFullYear()} Le Ventadour – Tous droits réservés.</span>
         <span>Une cuisine, des rencontres, un territoire.</span>
         <nav className="footer-legal-links" aria-label="Informations légales">
           <Link href="/legales">Mentions légales</Link>

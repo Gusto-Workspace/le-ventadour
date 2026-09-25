@@ -937,9 +937,9 @@ blockquote {
 }
 .footer-main {
   display: grid;
-  grid-template-columns: 1.1fr 1fr 1fr;
+  grid-template-columns: 1.1fr 1fr;
   gap: 80px;
-  padding-block: 85px 75px;
+  padding-block: 60px 22.5px;
 }
 .brand--footer {
   align-items: flex-start;
@@ -961,10 +961,18 @@ blockquote {
   font-size: 15px;
   line-height: 1.7;
 }
-.footer-address p:last-child {
-  margin-top: 32px;
-  margin-bottom: 0;
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
+.footer-address {
+  margin-bottom: 22px;
+  text-align: right;
+}
+.footer-address p { margin: 0; }
+.footer-address p + p { margin-top: 22px; }
 .footer-contact > a,
 .footer-social a {
   display: block;
@@ -1596,19 +1604,26 @@ blockquote {
     font-size: 15px;
   }
   .footer-main {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 45px 20px;
     padding-block: 70px 55px;
     justify-items: center;
     text-align: center;
   }
   .footer-main .brand {
-    grid-column: 1 / -1;
+    grid-column: 1;
     justify-self: center;
   }
   .footer-address,
   .footer-contact {
     font-size: 13px;
+  }
+  .footer-contact {
+    align-items: center;
+    text-align: center;
+  }
+  .footer-address {
+    text-align: center;
   }
   .footer-social {
     justify-content: center;
@@ -1737,6 +1752,9 @@ blockquote {
   background: var(--cream);
 }
 .interior-site:has(.menu-template) {
+  overflow: clip;
+}
+.interior-site:has(.a-la-carte) {
   overflow: clip;
 }
 .interior-site .site-header {
@@ -2261,6 +2279,11 @@ blockquote {
   grid-template-columns: minmax(230px, 0.34fr) minmax(0, 0.66fr);
   gap: 9%;
   padding-block: 145px 165px;
+}
+.a-la-carte-heading {
+  position: sticky;
+  top: clamp(24px, 4vh, 48px);
+  align-self: start;
 }
 .a-la-carte-heading h2 {
   margin: 30px 0 0;
@@ -3431,6 +3454,9 @@ blockquote {
   }
   .a-la-carte-heading h2 {
     font-size: clamp(60px, 8vw, 85px);
+  }
+  .a-la-carte-heading {
+    position: static;
   }
   .more-menu-list {
     max-width: 720px;
