@@ -1718,7 +1718,7 @@ blockquote {
   grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr);
   align-items: center;
   gap: clamp(50px, 7vw, 130px);
-  padding-block: 75px 140px;
+  padding-block: clamp(56px, 4vw, 72px) clamp(62px, 4.8vw, 84px);
 }
 .inside-intro-copy {
   position: relative;
@@ -2257,7 +2257,7 @@ blockquote {
 .inside-intro--catering {
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(50px, 6.5vw, 110px);
-  padding-block: 75px clamp(70px, 6.2vw, 96px);
+  padding-block: clamp(56px, 4vw, 72px) clamp(62px, 4.8vw, 84px);
 }
 .inside-intro--catering .inside-intro-copy h1 {
   margin: 35px 0 34px;
@@ -2273,7 +2273,7 @@ blockquote {
 .inside-intro--menu .editorial-arch-visual {
   position: relative;
   isolation: isolate;
-  width: min(100%, clamp(350px, 32vw, 650px));
+  width: min(100%, clamp(350px, 32vw, 520px));
   justify-self: end;
   aspect-ratio: 0.73;
 }
@@ -2293,7 +2293,7 @@ blockquote {
   z-index: 2;
   top: 2.5%;
   right: -5.5%;
-  width: clamp(104px, 12vw, 172px);
+  width: clamp(104px, 10vw, 148px);
   aspect-ratio: 1;
   pointer-events: none;
 }
@@ -2315,7 +2315,7 @@ blockquote {
   z-index: 0;
   left: -30%;
   bottom: 3%;
-  width: clamp(170px, 17vw, 250px);
+  width: clamp(150px, 14vw, 220px);
   aspect-ratio: 1086 / 1448;
   opacity: 0.32;
   pointer-events: none;
@@ -2794,7 +2794,7 @@ blockquote {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: clamp(590px, 57vw, 790px);
+  min-height: clamp(580px, 50vw, 720px);
   overflow: hidden;
   background: var(--cream);
 }
@@ -3259,8 +3259,8 @@ blockquote {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 55px;
-    padding-block: 55px 100px;
+    gap: clamp(36px, 6vw, 55px);
+    padding-block: 48px 72px;
   }
   .inside-intro-copy h1,
   .inside-intro--catering .inside-intro-copy h1,
@@ -3277,9 +3277,9 @@ blockquote {
     aspect-ratio: 0.93;
   }
   .inside-intro--menu .editorial-arch-visual {
-    width: min(88%, 620px);
+    width: min(88%, 520px);
     margin-right: 20px;
-    aspect-ratio: 0.83;
+    aspect-ratio: 0.9;
   }
   .inside-intro--menu .editorial-arch-badge {
     right: -3%;
@@ -3291,7 +3291,7 @@ blockquote {
   }
   .inside-intro-pair {
     width: 100%;
-    min-height: 620px;
+    min-height: clamp(480px, 68vw, 600px);
   }
   .inside-intro-pair-main {
     width: 79%;
@@ -3751,7 +3751,7 @@ blockquote {
   .reservation-review-list > div { grid-template-columns: 90px minmax(0, 1fr); }
 }
 @media (min-width: 601px) and (max-width: 900px) {
-  .reservation-hero { min-height: 610px; }
+  .reservation-hero { min-height: clamp(560px, 68vw, 610px); }
   .reservation-hero-image img { object-position: 60% center; }
   .reservation-hero-copy h1 { max-width: 570px; font-size: clamp(72px, 10vw, 96px); }
   .reservation-flow-layout { grid-template-columns: 1fr; gap: 34px; }
@@ -3954,7 +3954,7 @@ blockquote {
 
 /* Actualités : même typographie et mêmes compositions que les pages intérieures */
 .ventadour-news-intro-description { text-wrap: pretty; }
-.ventadour-news-photo-pair { position: relative; justify-self: end; width: 100%; max-width: min(48vw, 650px); min-width: 0; aspect-ratio: 0.9; }
+.ventadour-news-photo-pair { position: relative; justify-self: end; width: 100%; max-width: min(36vw, 560px); min-width: 0; aspect-ratio: 0.95; }
 .ventadour-news-photo-main { position: absolute; top: 0; right: 0; width: 88%; height: 100%; border-radius: 50% 50% 0 0 / 36% 36% 0 0; }
 .ventadour-news-photo-overlap { position: absolute; z-index: 2; bottom: -4%; left: 0; width: 61%; height: 74%; border: 3px solid var(--cream); border-radius: 50% 50% 0 0 / 36% 36% 0 0; }
 .ventadour-news-feed { padding-block: 30px 140px; }
@@ -3989,7 +3989,7 @@ blockquote {
   .ventadour-news-entry:nth-of-type(even) { grid-template-columns: 1fr; gap: 24px; padding-block: 45px; }
   .ventadour-news-entry:nth-of-type(even) .ventadour-news-image { order: 0; }
   .ventadour-news-copy h2 { font-size: clamp(45px, 10vw, 70px); }
-  .ventadour-news-photo-pair { align-self: center; width: 100%; max-width: min(88vw, 560px); aspect-ratio: 0.94; }
+  .ventadour-news-photo-pair { align-self: center; width: 100%; max-width: min(84vw, 560px); aspect-ratio: 0.94; }
   .ventadour-news-photo-main { width: 89%; }
   .ventadour-news-photo-overlap { width: 59%; height: 75%; }
 }

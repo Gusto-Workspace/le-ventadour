@@ -11,7 +11,7 @@ export default function HeroHomeSection() {
       <div className="hero-inner page-container">
         <div className="hero-copy">
           <p className="eyebrow hero-eyebrow">CUISINE DE SAISON À MONTAUBAN</p>
-          <h1 id="hero-title">Une table<br />entre histoire<br /><em>et création.</em></h1>
+          <h1 id="hero-title">Le goût<br /><em>des saisons.</em></h1>
           <span className="small-rule" />
           <p className="hero-intro">Au cœur d’un bâtiment du XVII<sup>e</sup> siècle,<br className="desktop-break" /> Le Ventadour cultive une cuisine vivante,<br className="desktop-break" /> inspirée par le marché et la région.</p>
           <div className="hero-actions">
