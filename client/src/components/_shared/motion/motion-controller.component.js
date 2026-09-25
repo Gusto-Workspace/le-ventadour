@@ -16,34 +16,14 @@ const motionRules = [
 ];
 
 const parallaxGroupSelector = ".inside-intro-pair, .ventadour-news-photo-pair";
-const pagesWithPlayedMotion = new Set();
 
 export default function MotionController() {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reducedMotion.matches || !("IntersectionObserver" in window)) return undefined;
 
-    let activePath = window.location.pathname;
-    let activePathHasPlayedMotion = false;
     const activeParallaxGroups = new Set();
     let parallaxFrame = 0;
-
-    const syncPagePath = () => {
-      const nextPath = window.location.pathname;
-      if (nextPath === activePath) return;
-
-      if (activePathHasPlayedMotion) pagesWithPlayedMotion.add(activePath);
-      activePath = nextPath;
-      activePathHasPlayedMotion = false;
-
-      if (pagesWithPlayedMotion.has(activePath)) {
-        document.querySelectorAll("[data-motion]").forEach((node) => {
-          if (node.dataset.motionPath !== activePath) return;
-          observer.unobserve(node);
-          node.classList.add("is-in-view");
-        });
-      }
-    };
 
     const updateParallax = () => {
       parallaxFrame = 0;
@@ -78,7 +58,6 @@ export default function MotionController() {
 
         if (entry.isIntersecting) {
           entry.target.classList.add("is-in-view");
-          if (entry.target.dataset.motionPath === activePath) activePathHasPlayedMotion = true;
           observer.unobserve(entry.target);
         }
       });
@@ -86,12 +65,7 @@ export default function MotionController() {
 
     const observeNode = (node) => {
       if (node.hasAttribute("data-parallax-group")) return;
-      if (!node.dataset.motionPath) node.dataset.motionPath = window.location.pathname;
       if (!node.dataset.motion || node.classList.contains("is-in-view")) return;
-      if (pagesWithPlayedMotion.has(node.dataset.motionPath)) {
-        node.classList.add("is-in-view");
-        return;
-      }
       observer.observe(node);
     };
 
@@ -109,7 +83,6 @@ export default function MotionController() {
 
     const scan = (root) => {
       if (!root || root.nodeType !== Node.ELEMENT_NODE) return;
-      syncPagePath();
       const elements = [root];
       motionRules.forEach(([selector, type]) => {
         const matches = [];
@@ -139,7 +112,6 @@ export default function MotionController() {
     document.documentElement.classList.add("motion-ready");
 
     const mutations = new MutationObserver((records) => {
-      syncPagePath();
       records.forEach((record) => {
         record.addedNodes.forEach(scan);
         record.removedNodes.forEach(unobserveTree);
