@@ -2070,6 +2070,9 @@ blockquote {
 .menu-template-item:last-child {
   padding-bottom: 0;
 }
+.menu-template-item--relation {
+  padding-bottom: 0;
+}
 .menu-template-allergens {
   padding-top: 4px;
   color: #716a63;
@@ -3864,16 +3867,12 @@ blockquote {
   font-size: 13px;
   line-height: 1.5;
 }
-.menu-template-item > span {
-  color: var(--rust);
-  font-family: var(--serif);
-  white-space: nowrap;
-}
 .menu-template-relation {
   margin: 10px 0;
   color: var(--rust);
   font-family: var(--serif);
   font-style: italic;
+  line-height: 1.4;
 }
 .a-la-carte-group + .a-la-carte-group { margin-top: 45px; }
 .a-la-carte-group > h3 {

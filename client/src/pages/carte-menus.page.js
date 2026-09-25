@@ -21,12 +21,11 @@ function MenuTemplateSections({ sections, showAllergens = false }) {
           <div className="menu-template-course-items">
             {section.items.map((item, itemIndex) => (
               <Fragment key={item.id || `${item.name || item}-${itemIndex}`}>
-              <div className="menu-template-item">
+              <div className={`menu-template-item${item.relationAfter ? " menu-template-item--relation" : ""}`}>
                 <div><p>{item.name || item}</p>
                   {item.description && <small>{item.description}</small>}
                   {showAllergens && item.allergens?.length > 0 && <small className="menu-template-allergens">( allergène {item.allergens.join(", ")} )</small>}
                 </div>
-                {item.price != null && <span>{item.price} €</span>}
               </div>
               {item.relationAfter && <p className="menu-template-relation">{item.relationAfter}</p>}
               </Fragment>
