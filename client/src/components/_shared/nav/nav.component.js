@@ -6,6 +6,8 @@ import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { useRestaurant } from "@/contexts/restaurant.context";
 import { hasVisibleNews } from "@/_assets/utils/news.utils";
 
+let hasResolvedInitialNavCheck = false;
+
 const nav = [
   ["Accueil", "/"],
   ["Traiteur", "/traiteur"],
@@ -16,7 +18,7 @@ const nav = [
 
 export default function NavComponent() {
   const [open, setOpen] = useState(false);
-  const [newsCheckResolved, setNewsCheckResolved] = useState(false);
+  const [newsCheckResolved, setNewsCheckResolved] = useState(hasResolvedInitialNavCheck);
   const { pathname } = useRouter();
   const { restaurant, loading } = useRestaurant();
   const menuItems = nav.filter(([label]) => label !== "Actualités" || (newsCheckResolved && hasVisibleNews(restaurant)));
@@ -24,10 +26,16 @@ export default function NavComponent() {
   useEffect(() => {
     if (newsCheckResolved) return undefined;
     if (restaurant || !loading) {
-      const frame = window.requestAnimationFrame(() => setNewsCheckResolved(true));
+      const frame = window.requestAnimationFrame(() => {
+        hasResolvedInitialNavCheck = true;
+        setNewsCheckResolved(true);
+      });
       return () => window.cancelAnimationFrame(frame);
     }
-    const fallback = window.setTimeout(() => setNewsCheckResolved(true), 500);
+    const fallback = window.setTimeout(() => {
+      hasResolvedInitialNavCheck = true;
+      setNewsCheckResolved(true);
+    }, 500);
     return () => window.clearTimeout(fallback);
   }, [loading, newsCheckResolved, restaurant]);
 
