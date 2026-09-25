@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useRestaurant } from "@/contexts/restaurant.context";
+import { isApiUnavailableError } from "@/_assets/utils/api-errors.utils";
 
 const CONFIRMED_STATUSES = new Set(["Pending", "Confirmed", "Active", "Late", "Finished"]);
 const getConfirmationUrl = (id) => `/reservations?confirmation=${encodeURIComponent(id)}&bankHold=success`;
@@ -22,7 +23,7 @@ function BankHoldForm({ apiUrl, reservationId, data }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ intentType, intentId }),
     });
-    if (!response.ok) throw new Error("finalize_failed");
+    if (!response.ok) throw Object.assign(new Error("finalize_failed"), { apiUnavailable: response.status >= 500 });
     localStorage.removeItem("gm_pending_bank_hold");
     setComplete(true);
   }, [apiUrl, reservationId]);
@@ -36,7 +37,7 @@ function BankHoldForm({ apiUrl, reservationId, data }) {
     processedIntent.current = intentId;
     setBusy(true);
     finalize(setupIntent ? "setup" : "payment", intentId)
-      .catch(() => setError("La validation de votre carte n’a pas pu être finalisée. Réessayez ou contactez le restaurant."))
+      .catch((error) => { if (!isApiUnavailableError(error)) setError("La validation de votre carte n’a pas pu être finalisée. Réessayez ou contactez le restaurant."); })
       .finally(() => setBusy(false));
   }, [busy, complete, finalize, router.isReady, router.query.payment_intent, router.query.setup_intent]);
 
@@ -60,8 +61,8 @@ function BankHoldForm({ apiUrl, reservationId, data }) {
       const intentId = result.setupIntent?.id || result.paymentIntent?.id;
       if (!intentId) throw new Error("payment_incomplete");
       await finalize(data.intentType, intentId);
-    } catch {
-      setError("La carte n’a pas pu être validée. Vérifiez les informations et réessayez.");
+    } catch (error) {
+      if (!isApiUnavailableError(error)) setError("La carte n’a pas pu être validée. Vérifiez les informations et réessayez.");
     } finally {
       setBusy(false);
     }
@@ -83,6 +84,7 @@ export default function BankHold({ reservationId }) {
   const { apiUrl } = useRestaurant();
   const [prepared, setPrepared] = useState(null);
   const [error, setError] = useState("");
+  const [silentlyUnavailable, setSilentlyUnavailable] = useState(false);
   const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   const stripePromise = useMemo(() => stripeKey ? loadStripe(stripeKey) : null, [stripeKey]);
 
@@ -90,11 +92,13 @@ export default function BankHold({ reservationId }) {
     let active = true;
     async function prepare() {
       try {
-        if (!reservationId || !apiUrl || !stripeKey) throw new Error("prepare_failed");
+        if (!reservationId || !apiUrl || !stripeKey) { setSilentlyUnavailable(true); return; }
         const response = await fetch(`${apiUrl}/reservations/${reservationId}/bank-hold/prepare`, { method: "POST", headers: { "Content-Type": "application/json" } });
         const payload = await response.json().catch(() => ({}));
         if (!response.ok) {
+          if (response.status >= 500) { setSilentlyUnavailable(true); return; }
           const statusResponse = await fetch(`${apiUrl}/reservations/${reservationId}`).catch(() => null);
+          if (!statusResponse || statusResponse.status >= 500) { setSilentlyUnavailable(true); return; }
           const statusPayload = statusResponse ? await statusResponse.json().catch(() => ({})) : {};
           if (CONFIRMED_STATUSES.has(statusPayload?.reservation?.status)) {
             localStorage.removeItem("gm_pending_bank_hold");
@@ -108,13 +112,16 @@ export default function BankHold({ reservationId }) {
         }
         if (active) setPrepared(payload);
       } catch (requestError) {
-        if (active) setError(requestError.message || "La validation bancaire ne peut pas être préparée pour le moment. Réessayez ou contactez le restaurant.");
+        if (!active) return;
+        if (isApiUnavailableError(requestError)) setSilentlyUnavailable(true);
+        else setError(requestError.message || "La validation bancaire ne peut pas être préparée pour le moment. Réessayez ou contactez le restaurant.");
       }
     }
     prepare();
     return () => { active = false; };
   }, [apiUrl, reservationId, stripeKey]);
 
+  if (silentlyUnavailable) return null;
   if (error) return <div className="reservation-step-content" role="alert"><p className="eyebrow reservation-step-eyebrow">RÉSERVATION</p><h2>Validation non finalisée.</h2><p>{error}</p><a className="reservation-back-link" href="/reservations">Retour aux réservations</a></div>;
   if (!prepared || !stripePromise) return <div className="reservation-step-content" role="status"><p className="eyebrow reservation-step-eyebrow">RÉSERVATION</p><h2>Préparation sécurisée…</h2><p>Nous préparons la validation de votre carte.</p></div>;
   return <Elements stripe={stripePromise} options={{ clientSecret: prepared.clientSecret }}><BankHoldForm apiUrl={apiUrl} reservationId={prepared.reservationId || reservationId} data={prepared} /></Elements>;

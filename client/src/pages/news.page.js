@@ -73,7 +73,6 @@ export default function NewsPage() {
     </section>
     <section className="ventadour-news-feed page-container" aria-label="Les actualités du Ventadour" aria-live="polite">
       {loading ? <p className="api-data-message" role="status">Chargement des actualités…</p> : null}
-      {error ? <p className="api-data-message" role="alert">Les actualités sont momentanément indisponibles.</p> : null}
       {!loading && !error && !news.length ? <p className="ventadour-news-empty">Aucune actualité n’est publiée pour le moment.</p> : null}
       {missingArticle ? <p className="api-data-message" role="alert">Cette actualité est introuvable ou n’est plus publiée.</p> : null}
       {news.map((item, index) => <article className={`ventadour-news-entry${index === 0 ? " ventadour-news-entry--lead" : ""}`} key={item._id || `${item.title}-${index}`}>

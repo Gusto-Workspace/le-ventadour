@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { useRestaurant } from "@/contexts/restaurant.context";
+import { isApiUnavailableError } from "@/_assets/utils/api-errors.utils";
 
 const subjects = [
   "Réservation",
@@ -38,12 +39,12 @@ export default function ContactForm() {
           restaurantEmail: restaurant.email,
         }),
       });
-      if (!response.ok) throw new Error("contact-form");
+      if (!response.ok) throw Object.assign(new Error("contact-form"), { apiUnavailable: response.status >= 500 });
       form.reset();
       setIsSubmitted(true);
       setMessage("");
-    } catch {
-      setMessage("Votre message n’a pas pu être envoyé. Réessayez ou contactez-nous par téléphone.");
+    } catch (error) {
+      if (!isApiUnavailableError(error)) setMessage("Votre message n’a pas pu être envoyé. Réessayez ou contactez-nous par téléphone.");
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +89,7 @@ export default function ContactForm() {
           {isSubmitting ? "Envoi…" : "Envoyer ma demande"} <span><ArrowIcon direction="right" size={22} /></span>
         </button>
         <p className="contact-form-required"><span>*</span> Champs obligatoires</p>
-        <p className="contact-form-status" aria-live="polite" role={message ? "alert" : "status"}>{message || (!loading && !restaurant?.email ? "L’envoi est momentanément indisponible. Contactez-nous par téléphone." : "")}</p>
+        <p className="contact-form-status" aria-live="polite" role={message ? "alert" : "status"}>{message}</p>
       </form>
     </div>
   );

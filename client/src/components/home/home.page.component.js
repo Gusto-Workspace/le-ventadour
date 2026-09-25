@@ -9,13 +9,12 @@ import RendezvousHomeSection from "./sections/rendezvous.home.section";
 import FooterComponent from "@/components/_shared/footer/footer.component";
 
 export default function HomePageComponent() {
-  const { restaurant, error, reload } = useRestaurant();
+  const { restaurant } = useRestaurant();
   const contact = getRestaurantContact(restaurant);
 
   return (
     <>
       <main>
-        {error && <p className="api-data-message" role="alert">Les informations du restaurant ne sont pas disponibles. <button type="button" onClick={reload}>Réessayer</button></p>}
         <HeroHomeSection />
         <CuisineHomeSection />
         <StoryHomeSection />

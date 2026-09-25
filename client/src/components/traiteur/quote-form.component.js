@@ -3,7 +3,7 @@ import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import { useRestaurant } from "@/contexts/restaurant.context";
 
 export default function QuoteForm() {
-  const { restaurant, loading } = useRestaurant();
+  const { restaurant } = useRestaurant();
   const contact = getRestaurantContact(restaurant);
 
   function prepareEmail(event) {
@@ -43,7 +43,6 @@ export default function QuoteForm() {
         <label>Convives <input name="guests" type="number" min="1" /></label>
       </div>
       <label>Parlez-nous de votre projet <textarea name="message" rows="3" required /></label>
-      {!loading && !contact.email && <p className="quote-form-feedback" role="status">L’adresse e-mail du restaurant est momentanément indisponible.</p>}
       <div className="quote-form-bottom"><button className="button button--dark" type="submit" disabled={!contact.email}>Envoyer <span><ArrowIcon size={22} /></span></button></div>
     </form>
   );

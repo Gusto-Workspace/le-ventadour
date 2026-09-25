@@ -16,7 +16,7 @@ export default function EditAvailability({ apiUrl, manageToken, restaurant, rese
     let active = true;
     async function loadAvailability() {
       if (!apiUrl || !manageToken || !restaurant?._id || !reservation?._id || !editData.reservationDate) {
-        if (active) { setLoading(false); setError("Les disponibilités ne peuvent pas être chargées."); }
+        if (active) { setLoading(false); setError(true); }
         return;
       }
       setLoading(true);
@@ -33,7 +33,7 @@ export default function EditAvailability({ apiUrl, manageToken, restaurant, rese
           serviceCoverUsage: Array.isArray(payload.serviceCoverUsage) ? payload.serviceCoverUsage : [],
         });
       } catch {
-        if (active) { setAvailability({ reservations: [], slotCoverUsage: [], serviceCoverUsage: [] }); setError("Impossible de charger les horaires disponibles. Réessayez en choisissant une date."); }
+        if (active) { setAvailability({ reservations: [], slotCoverUsage: [], serviceCoverUsage: [] }); setError(true); }
       } finally { if (active) setLoading(false); }
     }
     loadAvailability();
@@ -72,6 +72,6 @@ export default function EditAvailability({ apiUrl, manageToken, restaurant, rese
     {editData.reservationDate && isReservationDateClosed({ reservationDate: editData.reservationDate, restaurant }) ? <p className="reservation-form-error">Le restaurant est fermé à cette date.</p> : null}
     <div className="reservation-edit-meals" aria-label="Service"><button type="button" className={meal === "lunch" ? "is-selected" : ""} aria-pressed={meal === "lunch"} onClick={() => { setMeal("lunch"); setEditData((current) => ({ ...current, reservationTime: "" })); }}>Déjeuner</button><button type="button" className={meal === "dinner" ? "is-selected" : ""} aria-pressed={meal === "dinner"} onClick={() => { setMeal("dinner"); setEditData((current) => ({ ...current, reservationTime: "" })); }}>Dîner</button></div>
     <p className="reservation-control-label">HORAIRES DISPONIBLES</p>
-    {loading ? <p role="status">Recherche des horaires…</p> : error ? <p className="reservation-form-error" role="alert">{error}</p> : timeOptions.length ? <div className="reservation-time-list">{timeOptions.map((option) => <button key={option.time} type="button" className={editData.reservationTime === option.time ? "is-selected" : ""} aria-pressed={editData.reservationTime === option.time} onClick={() => setEditData((current) => ({ ...current, reservationTime: option.time }))}>{option.time}</button>)}</div> : <p className="reservation-empty-times" role="status">Aucun horaire disponible pour ce service et ce nombre de convives.</p>}
+    {loading ? <p role="status">Recherche des horaires…</p> : error ? null : timeOptions.length ? <div className="reservation-time-list">{timeOptions.map((option) => <button key={option.time} type="button" className={editData.reservationTime === option.time ? "is-selected" : ""} aria-pressed={editData.reservationTime === option.time} onClick={() => setEditData((current) => ({ ...current, reservationTime: option.time }))}>{option.time}</button>)}</div> : <p className="reservation-empty-times" role="status">Aucun horaire disponible pour ce service et ce nombre de convives.</p>}
   </div>;
 }

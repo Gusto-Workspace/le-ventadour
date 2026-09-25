@@ -9,6 +9,7 @@ import {
   getReservationTimeOptions,
   isReservationDateClosed,
 } from "@/_assets/utils/reservations.utils";
+import { isApiUnavailableError } from "@/_assets/utils/api-errors.utils";
 
 const steps = ["Disponibilités", "Vos informations", "Récapitulatif"];
 const weekdays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
@@ -52,7 +53,7 @@ function isClosedDate(date, today) {
 
 export default function ReservationFlow() {
   const router = useRouter();
-  const { restaurant, loading: restaurantLoading, error: restaurantError, apiUrl } = useRestaurant();
+  const { restaurant, loading: restaurantLoading, apiUrl } = useRestaurant();
   const today = new Date();
   const [step, setStep] = useState(1);
   const [visibleMonth, setVisibleMonth] = useState(() => monthStart(today));
@@ -173,7 +174,7 @@ export default function ReservationFlow() {
         localStorage.removeItem("gm_pending_bank_hold");
         router.replace("/reservations", undefined, { shallow: true });
       })
-      .catch(() => { if (active) setConfirmationError("Nous n’avons pas pu vérifier le retour de votre réservation. Contactez le restaurant si vous avez déjà validé votre carte."); })
+      .catch(() => { if (active) setConfirmationError(""); })
       .finally(() => { if (active) setConfirmationLoading(false); });
     return () => { active = false; };
   }, [apiUrl, router, router.isReady, router.query.bankHold, router.query.confirmation]);
@@ -249,7 +250,7 @@ export default function ReservationFlow() {
         }),
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error("create_failed");
+      if (!response.ok) throw Object.assign(new Error("create_failed"), { status: response.status });
       if (payload.requiresAction && !payload.redirectUrl) throw new Error("bank_hold_redirect_missing");
       if (payload.requiresAction && payload.redirectUrl) {
         localStorage.setItem("gm_pending_bank_hold", JSON.stringify({
@@ -268,7 +269,7 @@ export default function ReservationFlow() {
       await loadAvailability();
     } catch (requestError) {
       console.error("Reservation could not be created.", requestError);
-      setSubmissionError("Votre demande n’a pas pu être envoyée. Vérifiez les informations et réessayez.");
+      if (!isApiUnavailableError(requestError, requestError?.status)) setSubmissionError("Votre demande n’a pas pu être envoyée. Vérifiez les informations et réessayez.");
     } finally {
       setSubmitting(false);
     }
@@ -279,12 +280,12 @@ export default function ReservationFlow() {
     setPendingHoldError("");
     try {
       const response = await fetch(`${apiUrl}/reservations/${pendingBankHold.reservationId}/cancel-pending-bank-hold`, { method: "POST", headers: { "Content-Type": "application/json" } });
-      if (!response.ok) throw new Error("cancel_failed");
+      if (!response.ok) throw Object.assign(new Error("cancel_failed"), { status: response.status });
       localStorage.removeItem("gm_pending_bank_hold");
       setPendingBankHold(null);
       await loadAvailability();
-    } catch {
-      setPendingHoldError("La réservation en attente n’a pas pu être annulée. Réessayez.");
+    } catch (requestError) {
+      if (!isApiUnavailableError(requestError, requestError?.status)) setPendingHoldError("La réservation en attente n’a pas pu être annulée. Réessayez.");
     }
   }
 
@@ -348,7 +349,7 @@ export default function ReservationFlow() {
             );
           })}
         </div>
-        {availabilityLoading ? <p className="reservation-calendar-legend" role="status">Recherche des disponibilités…</p> : availabilityError ? <p className="reservation-form-error" role="alert">Les disponibilités ne peuvent pas être chargées. <button type="button" onClick={loadAvailability}>Réessayer</button></p> : <p className="reservation-calendar-legend"><span aria-hidden="true" /> Horaires disponibles pour {guests} {guests > 1 ? "convives" : "convive"}</p>}
+        {availabilityLoading ? <p className="reservation-calendar-legend" role="status">Recherche des disponibilités…</p> : availabilityError ? null : <p className="reservation-calendar-legend"><span aria-hidden="true" /> Horaires disponibles pour {guests} {guests > 1 ? "convives" : "convive"}</p>}
       </section>
     );
   }
@@ -379,9 +380,7 @@ export default function ReservationFlow() {
 
           <div className="reservation-availability-times">
             <p className="eyebrow reservation-control-label">HORAIRES DISPONIBLES</p>
-            {availabilityError ? (
-              <p className="reservation-form-error" role="alert">Impossible de vérifier les créneaux. Vous pouvez réessayer.</p>
-            ) : !selectedDate ? (
+            {availabilityError ? null : !selectedDate ? (
               <p className="reservation-times-prompt">Choisissez une date pour afficher ses horaires.</p>
             ) : times.length ? (
               <div className="reservation-time-list" aria-label={`Horaires disponibles pour ${guests} convives`}>
@@ -466,7 +465,6 @@ export default function ReservationFlow() {
       {confirmationLoading ? <p className="api-data-message page-container" role="status">Vérification de votre réservation…</p> : null}
       {confirmationError ? <p className="api-data-message page-container" role="alert">{confirmationError}</p> : null}
       {pendingBankHold ? <div className="api-data-message page-container reservation-pending-hold" role="status"><p>Une validation bancaire est en attente pour votre réservation ({pendingBankHold.date ? formatDate(new Date(pendingBankHold.date), { day: "numeric", month: "long" }) : "date à confirmer"} · {pendingBankHold.time} · {pendingBankHold.guests} convives).</p><Link href={`/reservations/${pendingBankHold.reservationId}/bank-hold`}>Reprendre la validation</Link><button type="button" onClick={cancelPendingBankHold}>Annuler la réservation</button>{pendingHoldError && <p role="alert">{pendingHoldError}</p>}</div> : null}
-      {restaurantError ? <p className="api-data-message page-container" role="alert">Les informations du restaurant ne sont pas disponibles pour le moment.</p> : null}
       {!restaurantLoading && restaurant && !hasReservations ? <p className="api-data-message page-container" role="status">La réservation en ligne n’est pas disponible actuellement. Contactez directement le restaurant.</p> : null}
       <div className="reservation-flow-layout page-container">
         <nav className="reservation-progress" aria-label="Étapes de réservation">

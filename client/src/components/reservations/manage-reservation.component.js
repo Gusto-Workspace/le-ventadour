@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useRestaurant } from "@/contexts/restaurant.context";
+import { isApiUnavailableError } from "@/_assets/utils/api-errors.utils";
 import { getRestaurantContact } from "@/_assets/utils/restaurant-data.utils";
 import { formatPublicReservationDate, getReservationEditDate, publicReservationError, reservationStatusLabel } from "@/_assets/utils/reservation-public.utils";
 import EditAvailability from "./edit-availability.component";
@@ -19,6 +20,7 @@ export default function ManageReservation({ reservationId, manageToken }) {
   const [reservation, setReservation] = useState(null);
   const [management, setManagement] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [silentlyUnavailable, setSilentlyUnavailable] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [success, setSuccess] = useState("");
@@ -30,17 +32,23 @@ export default function ManageReservation({ reservationId, manageToken }) {
   const setEditValidity = useCallback((value) => setValidEdit(value), []);
 
   const loadReservation = useCallback(async () => {
-    if (!reservationId || !manageToken || !apiUrl) { setLoadError("Ce lien de réservation est invalide ou incomplet."); setLoading(false); return; }
+    if (!reservationId || !manageToken) { setLoadError("Ce lien de réservation est invalide ou incomplet."); setLoading(false); return; }
+    if (!apiUrl) { setSilentlyUnavailable(true); setLoading(false); return; }
     setLoading(true);
     setLoadError("");
+    setSilentlyUnavailable(false);
     try {
       const response = await fetch(`${apiUrl}/reservations/${reservationId}?token=${encodeURIComponent(manageToken)}`);
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok || !payload.reservation) throw new Error(publicReservationError(payload, response.status, "Impossible de retrouver cette réservation."));
+      if (!response.ok || !payload.reservation) {
+        if (response.status >= 500) throw Object.assign(new Error("reservation_api_unavailable"), { apiUnavailable: true });
+        throw new Error(publicReservationError(payload, response.status, "Impossible de retrouver cette réservation."));
+      }
       setReservation(payload.reservation);
       setManagement(payload.management || null);
     } catch (error) {
-      setLoadError(error.message || "Impossible de retrouver cette réservation.");
+      if (isApiUnavailableError(error)) setSilentlyUnavailable(true);
+      else setLoadError(error.message || "Impossible de retrouver cette réservation.");
     } finally { setLoading(false); }
   }, [apiUrl, manageToken, reservationId]);
 
@@ -70,14 +78,16 @@ export default function ManageReservation({ reservationId, manageToken }) {
         method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editData),
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(publicReservationError(payload, response.status, "Impossible de modifier la réservation."));
+      if (!response.ok) throw Object.assign(new Error(publicReservationError(payload, response.status, "Impossible de modifier la réservation.")), { apiUnavailable: response.status >= 500 });
       setReservation(payload.reservation || reservation);
       setManagement(payload.management || null);
       setEditing(false); setConfirmCancel(false);
       setSuccess("Votre réservation a bien été modifiée.");
     } catch (error) {
-      setActionError(error.message || "Impossible de modifier la réservation.");
-      setEditData((current) => ({ ...current, reservationTime: "" }));
+      if (!isApiUnavailableError(error)) {
+        setActionError(error.message || "Impossible de modifier la réservation.");
+        setEditData((current) => ({ ...current, reservationTime: "" }));
+      }
     } finally { setBusy(false); }
   }
 
@@ -87,17 +97,18 @@ export default function ManageReservation({ reservationId, manageToken }) {
     try {
       const response = await fetch(`${apiUrl}/reservations/${reservation._id}/cancel?token=${encodeURIComponent(manageToken)}`, { method: "POST", headers: { "Content-Type": "application/json" } });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(publicReservationError(payload, response.status, "Impossible d’annuler la réservation."));
+      if (!response.ok) throw Object.assign(new Error(publicReservationError(payload, response.status, "Impossible d’annuler la réservation.")), { apiUnavailable: response.status >= 500 });
       setReservation(payload.reservation || reservation);
       setManagement(payload.management || null);
       setConfirmCancel(false);
       setSuccess("Votre réservation a bien été annulée.");
     } catch (error) {
-      setActionError(error.message || "Impossible d’annuler la réservation.");
+      if (!isApiUnavailableError(error)) setActionError(error.message || "Impossible d’annuler la réservation.");
     } finally { setBusy(false); }
   }
 
   if (loading || (reservation && restaurantLoading)) return <ManagementMessage title="Chargement en cours">Nous retrouvons votre réservation.</ManagementMessage>;
+  if (silentlyUnavailable) return null;
   if (loadError) return <ManagementMessage title="Réservation introuvable" error>{loadError}</ManagementMessage>;
   if (restaurantMismatch) return <ManagementMessage title="Lien non valide" error>Cette réservation ne correspond pas au restaurant Le Ventadour.</ManagementMessage>;
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRestaurant } from "@/contexts/restaurant.context";
+import { isApiUnavailableError } from "@/_assets/utils/api-errors.utils";
 import { formatPublicReservationDate, formatPublicReservationDateTime } from "@/_assets/utils/reservation-public.utils";
 
 function offerError(status, fallback = "Cette proposition n’est plus disponible.") {
@@ -15,6 +16,7 @@ export default function WaitlistOffer({ token }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [silentlyUnavailable, setSilentlyUnavailable] = useState(false);
   const [message, setMessage] = useState("");
   const [now, setNow] = useState(() => Date.now());
 
@@ -26,14 +28,17 @@ export default function WaitlistOffer({ token }) {
   useEffect(() => {
     let active = true;
     async function loadOffer() {
-      if (!token || !apiUrl) { setError("Ce lien de proposition est invalide."); setLoading(false); return; }
+      if (!token) { setError("Ce lien de proposition est invalide."); setLoading(false); return; }
+      if (!apiUrl) { setSilentlyUnavailable(true); setLoading(false); return; }
       try {
         const response = await fetch(`${apiUrl}/reservations/waitlist-offers/${token}`);
         const payload = await response.json().catch(() => ({}));
+        if (response.status >= 500) { setSilentlyUnavailable(true); return; }
         if (!response.ok) throw new Error(offerError(response.status));
         if (active) setOffer(payload);
       } catch (requestError) {
-        if (active) setError(requestError.message || "Cette proposition n’est plus disponible.");
+        if (active && isApiUnavailableError(requestError)) setSilentlyUnavailable(true);
+        else if (active) setError(requestError.message || "Cette proposition n’est plus disponible.");
       } finally { if (active) setLoading(false); }
     }
     loadOffer();
@@ -46,6 +51,7 @@ export default function WaitlistOffer({ token }) {
     try {
       const response = await fetch(`${apiUrl}/reservations/waitlist-offers/${token}/${action}`, { method: "POST", headers: { "Content-Type": "application/json" } });
       const payload = await response.json().catch(() => ({}));
+      if (response.status >= 500) { setSilentlyUnavailable(true); return; }
       if (!response.ok) {
         if (response.status === 404 || response.status === 409 || response.status === 410) setOffer((current) => ({ ...current, state: "expired" }));
         throw new Error(offerError(response.status, "Impossible de répondre à cette proposition. Réessayez."));
@@ -58,10 +64,14 @@ export default function WaitlistOffer({ token }) {
       }
       setOffer((current) => ({ ...current, state: action === "accept" ? "accepted" : "declined", reservation: payload.reservation || current?.reservation }));
       setMessage(action === "accept" ? "Votre réservation est confirmée. Le lien de votre e-mail permet de la modifier ou de l’annuler selon les conditions du restaurant." : "Votre refus a bien été pris en compte.");
-    } catch (responseError) { setError(responseError.message || "Impossible de répondre à cette proposition."); }
+    } catch (responseError) {
+      if (isApiUnavailableError(responseError)) setSilentlyUnavailable(true);
+      else setError(responseError.message || "Impossible de répondre à cette proposition.");
+    }
     finally { setBusy(""); }
   }
 
+  if (silentlyUnavailable) return null;
   if (loading) return <div className="reservation-service-state" role="status"><h2>Vérification de la proposition…</h2><p>Nous vérifions que cette table est toujours disponible.</p></div>;
   if (error && !offer) return <div className="reservation-service-state" role="alert"><h2>Proposition indisponible.</h2><p>{error}</p></div>;
   const reservation = offer?.reservation || {};

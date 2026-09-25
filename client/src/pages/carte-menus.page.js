@@ -126,7 +126,6 @@ export default function CarteMenusPage() {
 
       <div id="menu-content" aria-live="polite">
         {loading ? <p className="api-data-message" role="status">Chargement de la carte…</p> : null}
-        {error ? <p className="api-data-message" role="alert">La carte est momentanément indisponible. Merci de réessayer plus tard.</p> : null}
         {!loading && !error && menus.map((menu, index) => <MenuTemplate menu={menu} index={index} key={menu.id} />)}
       </div>
 
