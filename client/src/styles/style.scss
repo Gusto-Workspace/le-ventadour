@@ -1197,9 +1197,11 @@ blockquote {
   .drawer-top button {
     border: 0;
     background: none;
+    color: inherit;
     font-size: 34px;
     line-height: 1;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
   .mobile-drawer nav {
     display: flex;
@@ -1393,7 +1395,7 @@ blockquote {
     grid-row: 2;
     width: 83%;
     aspect-ratio: 0.87;
-    margin: 0 auto 70px 0;
+    margin: 0 auto 70px;
   }
   .story-copy {
     grid-column: 1 / -1;
@@ -2211,9 +2213,6 @@ blockquote {
   gap: 24px;
   border-top: 1px solid #aa877a;
   padding: 22px 0 24px;
-}
-.a-la-carte-item:last-child {
-  border-bottom: 1px solid #aa877a;
 }
 .a-la-carte-item p {
   margin: 0;
@@ -3431,6 +3430,12 @@ blockquote {
   .reservation-summary { grid-column: 2; grid-row: 2; }
 }
 @media (max-width: 600px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+  }
+  .footer-main .brand {
+    grid-column: 1;
+  }
   .interior-eyebrow {
     gap: 10px;
     font-size: 10px;
@@ -3499,6 +3504,7 @@ blockquote {
   .chef-editorial-photo {
     width: 75%;
     aspect-ratio: 0.84;
+    margin-inline: auto;
   }
   .chef-editorial-copy {
     padding-left: 10%;
@@ -3648,6 +3654,7 @@ blockquote {
   }
   .wedding-section-photo {
     width: 80%;
+    margin-inline: auto;
   }
   .wedding-moments {
     grid-template-columns: 1fr;
@@ -3658,6 +3665,7 @@ blockquote {
   }
   .professionals-photo {
     width: 85%;
+    margin-inline: auto;
   }
   .professionals-section {
     padding-block: 45px;
