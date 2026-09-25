@@ -51,7 +51,7 @@ export default function ContactForm() {
   }
 
   if (isSubmitted) return <div className="contact-details-form contact-form-success" role="status">
-    <p className="contact-form-eyebrow eyebrow">04 / NOUS ÉCRIRE</p>
+    <p className="contact-form-eyebrow eyebrow">05 / NOUS ÉCRIRE</p>
     <h3>Message envoyé.</h3>
     <p>Merci. Notre équipe vous répondra dès que possible.</p>
     <button type="button" className="reservation-back-link" onClick={() => setIsSubmitted(false)}>Nouveau message</button>
@@ -59,7 +59,7 @@ export default function ContactForm() {
 
   return (
     <div className="contact-details-form">
-      <p className="contact-form-eyebrow eyebrow">04 / NOUS ÉCRIRE</p>
+      <p className="contact-form-eyebrow eyebrow">05 / NOUS ÉCRIRE</p>
       <form onSubmit={handleSubmit}>
         <div className="contact-form-field">
           <label htmlFor="contact-name">Nom et prénom <span>*</span></label>

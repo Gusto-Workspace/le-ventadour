@@ -6,13 +6,13 @@ import ContactForm from "@/components/contact/contact-form.component";
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
 import { getRestaurantContact } from "@/_assets/utils/restaurant-contact.utils";
 import { useRestaurant } from "@/contexts/restaurant.context";
-import { getOpeningHoursGroups } from "@/_assets/utils/restaurant-data.utils";
+import { getContactOpeningHours } from "@/_assets/utils/restaurant-data.utils";
 
 export default function ContactPage() {
-  const { restaurant } = useRestaurant();
+  const { restaurant, loading, error } = useRestaurant();
   const contact = getRestaurantContact(restaurant);
   const telephone = contact.phone.replace(/[^+\d]/g, "");
-  const openingHours = getOpeningHoursGroups(contact.openingHours);
+  const openingHours = getContactOpeningHours(contact.openingHours);
   const contactDescription = `Contacter Le Ventadour et David Aranda${contact.addressText ? ` au ${contact.addressText}` : " à Montauban"}.`;
   return (
     <InteriorLayout title="Contact" description={contactDescription}>
@@ -47,13 +47,31 @@ export default function ContactPage() {
               <a className="contact-detail-main" href={`mailto:${contact.email}`}>{contact.email}</a>
               <p>Nous répondrons à votre demande dès que possible.</p>
             </div>}
+            <div className="contact-detail contact-detail--opening-hours" aria-busy={loading}>
+              <span>04 / HORAIRES</span>
+              {loading ? (
+                <ul className="contact-opening-hours contact-opening-hours--loading" aria-hidden="true">
+                  {Array.from({ length: 7 }, (_, index) => <li key={index}><span /><span /></li>)}
+                </ul>
+              ) : error || !openingHours.length ? (
+                <p className="contact-opening-hours-unavailable" role="status">Horaires momentanément indisponibles</p>
+              ) : (
+                <ul className="contact-opening-hours">
+                  {openingHours.map((day) => <li key={day.label}><span>{day.label}</span><span className={day.isClosed ? "is-closed" : ""}>{day.value}</span></li>)}
+                </ul>
+              )}
+            </div>
           </div>
+        </div>
+      </section>
 
+      <section className="contact-form-section" aria-label="Nous écrire">
+        <div className="contact-form-section-inner page-container">
           <ContactForm />
         </div>
       </section>
 
-      <section className="contact-visit page-container" aria-labelledby="visit-title"><EditorialPhoto className="contact-visit-photo" src={homeAsset("montauban-tarn")} alt="Le Tarn et le centre historique de Montauban" sizes="(max-width: 900px) 90vw, 55vw" /><div className="contact-visit-copy"><p className="eyebrow interior-eyebrow">CÔTÉ BISTROT</p><h2 id="visit-title">Le rendez-vous<br /><em>du déjeuner.</em></h2>{openingHours.length ? <><p>Les horaires du restaurant :</p><ul className="contact-opening-hours">{openingHours.map((day) => <li key={day.label}><span>{day.label}</span><span>{day.value}</span></li>)}</ul></> : null}<p>Pour une réservation, contactez l’équipe au minimum la veille. Elle vous confirmera sa disponibilité.</p><Link className="button button--dark" href="/reservations">Préparer ma visite <span><ArrowIcon size={22} /></span></Link></div></section>
+      <section className="contact-visit page-container" aria-labelledby="visit-title"><EditorialPhoto className="contact-visit-photo" src={homeAsset("montauban-tarn")} alt="Le Tarn et le centre historique de Montauban" sizes="(max-width: 900px) 90vw, 55vw" /><div className="contact-visit-copy"><p className="eyebrow interior-eyebrow">CÔTÉ BISTROT</p><h2 id="visit-title">Le rendez-vous<br /><em>du déjeuner.</em></h2><p>Pour une réservation, contactez l’équipe au minimum la veille. Elle vous confirmera sa disponibilité.</p><Link className="button button--dark" href="/reservations">Préparer ma visite <span><ArrowIcon size={22} /></span></Link></div></section>
 
       <section className="inside-outro" aria-labelledby="contact-outro-title"><div className="inside-outro-inner page-container"><div><p className="eyebrow eyebrow--light">CÔTÉ TRAITEUR</p><h2 id="contact-outro-title">Un événement<br /><em>en tête ?</em></h2></div><div><p>Cocktail, mariage ou réception professionnelle : racontez-nous votre projet et construisons ensemble une prestation qui vous ressemble.</p><Link href="/traiteur#devis" className="button button--white">Demander un devis <span><ArrowIcon size={22} /></span></Link></div></div></section>
     </InteriorLayout>

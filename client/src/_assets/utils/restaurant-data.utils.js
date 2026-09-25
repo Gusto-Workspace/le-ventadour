@@ -72,6 +72,40 @@ export function getOpeningHoursGroups(hours = []) {
   }));
 }
 
+const contactWeekdays = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+
+function formatContactOpeningDay(day) {
+  if (!day || day.isClosed || !Array.isArray(day.hours) || !day.hours.length) return "Fermé";
+  const ranges = day.hours.map((range) => {
+    const open = text(range?.open);
+    const close = text(range?.close);
+    return open && close ? `${open} – ${close}` : "";
+  }).filter(Boolean);
+  return ranges.length ? ranges.join(" • ") : "Fermé";
+}
+
+export function getContactOpeningHours(hours = []) {
+  if (!Array.isArray(hours) || !hours.length) return [];
+
+  const schedulesByIndex = new Map();
+  hours.forEach((day, index) => {
+    const mappedIndex = dayIndex(day?.day);
+    // Some API records use translated keys such as "hours.days.monday".
+    // Match L’Ambassade and fall back to the API's existing weekday order.
+    const targetIndex = mappedIndex >= 0 ? mappedIndex : index < 7 ? index : -1;
+    if (targetIndex >= 0 && !schedulesByIndex.has(targetIndex)) {
+      schedulesByIndex.set(targetIndex, day);
+    }
+  });
+
+  return contactWeekdays.flatMap((label, index) => {
+    const day = schedulesByIndex.get(index);
+    if (!day) return [];
+    const value = formatContactOpeningDay(day);
+    return [{ label, value, isClosed: value === "Fermé" }];
+  });
+}
+
 function menuItemName(dish) {
   return text(typeof dish === "string" ? dish : dish?.name);
 }
