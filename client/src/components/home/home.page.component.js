@@ -1,3 +1,4 @@
+import { useRestaurant } from "@/contexts/restaurant.context";
 import { getRestaurantContact } from "@/_assets/utils/restaurant-contact.utils";
 import HeroHomeSection from "./sections/hero.home.section";
 import CuisineHomeSection from "./sections/cuisine.home.section";
@@ -8,11 +9,13 @@ import RendezvousHomeSection from "./sections/rendezvous.home.section";
 import FooterComponent from "@/components/_shared/footer/footer.component";
 
 export default function HomePageComponent() {
-  const contact = getRestaurantContact();
+  const { restaurant, error, reload } = useRestaurant();
+  const contact = getRestaurantContact(restaurant);
 
   return (
     <>
       <main>
+        {error && <p className="api-data-message" role="alert">Les informations du restaurant ne sont pas disponibles. <button type="button" onClick={reload}>Réessayer</button></p>}
         <HeroHomeSection />
         <CuisineHomeSection />
         <StoryHomeSection />

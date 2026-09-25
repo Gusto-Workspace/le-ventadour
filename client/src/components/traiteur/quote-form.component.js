@@ -1,8 +1,10 @@
 import { getRestaurantContact } from "@/_assets/utils/restaurant-contact.utils";
 import ArrowIcon from "@/components/_shared/arrow-icon.component";
+import { useRestaurant } from "@/contexts/restaurant.context";
 
 export default function QuoteForm() {
-  const contact = getRestaurantContact();
+  const { restaurant, loading } = useRestaurant();
+  const contact = getRestaurantContact(restaurant);
 
   function prepareEmail(event) {
     event.preventDefault();
@@ -20,7 +22,9 @@ export default function QuoteForm() {
       "Votre projet :",
       values.message,
     ].join("\n");
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (contact.email) {
+      window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
   }
 
   return (
@@ -39,7 +43,8 @@ export default function QuoteForm() {
         <label>Convives <input name="guests" type="number" min="1" /></label>
       </div>
       <label>Parlez-nous de votre projet <textarea name="message" rows="3" required /></label>
-      <div className="quote-form-bottom"><button className="button button--dark" type="submit">Envoyer <span><ArrowIcon size={22} /></span></button></div>
+      {!loading && !contact.email && <p className="quote-form-feedback" role="status">L’adresse e-mail du restaurant est momentanément indisponible.</p>}
+      <div className="quote-form-bottom"><button className="button button--dark" type="submit" disabled={!contact.email}>Envoyer <span><ArrowIcon size={22} /></span></button></div>
     </form>
   );
 }

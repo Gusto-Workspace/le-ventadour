@@ -6,7 +6,7 @@ import RendezvousHomeSection from "@/components/home/sections/rendezvous.home.se
 
 export default function ReservationsPage() {
   return (
-    <InteriorLayout title="Réserver" description="Réserver une table pour le déjeuner au Ventadour, restaurant à Montauban.">
+    <InteriorLayout title="Réserver" description="Réserver une table au Ventadour, restaurant à Montauban.">
       <section className="reservation-hero" aria-labelledby="booking-title">
         <div className="reservation-hero-image" aria-hidden="true">
           <Image src="/img/reservations/bg-hero-resa.png" alt="" fill priority sizes="100vw" />

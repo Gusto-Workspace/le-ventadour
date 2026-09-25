@@ -1,10 +1,12 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ArrowIcon from "@/components/_shared/arrow-icon.component";
 import InteriorLayout from "@/components/_shared/interior/interior-layout.component";
 import EditorialPhoto from "@/components/_shared/interior/editorial-photo.component";
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
-import { aLaCarte, menus } from "@/_assets/data/editorial.data";
+import { useRestaurant } from "@/contexts/restaurant.context";
+import { normalizeDishCategories, normalizeMenus } from "@/_assets/utils/restaurant-data.utils";
 
 function MenuTemplateSections({ sections, showAllergens = false }) {
   return (
@@ -14,13 +16,20 @@ function MenuTemplateSections({ sections, showAllergens = false }) {
           <div className="menu-template-course-heading">
             <p className="menu-template-course-index"><span>{String(sectionIndex + 1).padStart(2, "0")}</span><i /></p>
             <h3>{section.title}</h3>
+            {section.price != null && <span className="menu-template-course-price">{section.price} €</span>}
           </div>
           <div className="menu-template-course-items">
             {section.items.map((item, itemIndex) => (
-              <div className="menu-template-item" key={item.id || `${item.name}-${itemIndex}`}>
-                <p>{item.name}</p>
-                {showAllergens && item.allergens?.length > 0 && <small className="menu-template-allergens">( allergène {item.allergens.join(", ")} )</small>}
+              <Fragment key={item.id || `${item.name || item}-${itemIndex}`}>
+              <div className="menu-template-item">
+                <div><p>{item.name || item}</p>
+                  {item.description && <small>{item.description}</small>}
+                  {showAllergens && item.allergens?.length > 0 && <small className="menu-template-allergens">( allergène {item.allergens.join(", ")} )</small>}
+                </div>
+                {item.price != null && <span>{item.price} €</span>}
               </div>
+              {item.relationAfter && <p className="menu-template-relation">{item.relationAfter}</p>}
+              </Fragment>
             ))}
           </div>
         </div>
@@ -42,7 +51,6 @@ function MenuTemplate({ menu, index }) {
             {menu.eyebrow && <p className="eyebrow">{menu.eyebrow}</p>}
             <h2 id={`${menuId}-title`}><span>Menu</span><em>{menuName}</em></h2>
             {menu.price != null && <p className="menu-formula-price">{menu.price} €</p>}
-            {(menu.period || menu.subtitle) && <p className="printed-menu-period">{menu.period || menu.subtitle}</p>}
             {menu.description && <><span className="small-rule" /><p className="printed-menu-description">{menu.description}</p></>}
             {menu.notes?.length > 0 && <div className="printed-menu-notes">{menu.notes.map((note, noteIndex) => <p key={note.id || noteIndex}>{note.text || note}</p>)}</div>}
           </div>
@@ -65,15 +73,18 @@ function MenuTemplate({ menu, index }) {
 }
 
 export default function CarteMenusPage() {
+  const { restaurant, loading, error } = useRestaurant();
+  const menus = normalizeMenus(restaurant);
+  const categories = normalizeDishCategories(restaurant);
   return (
-    <InteriorLayout title="Carte & Menus" description="Le Ventadour côté Bistrot : David Aranda, cuisine de saison, Menu Bistrot, Menu Ventadour et carte à Montauban.">
+    <InteriorLayout title="Carte & Menus" description="Découvrez les menus et la carte de saison du Ventadour à Montauban.">
       <section className="inside-intro inside-intro--menu page-container" aria-labelledby="menu-page-title">
         <div className="inside-intro-copy">
           <p className="eyebrow interior-eyebrow">CARTE & MENUS</p>
           <h1 id="menu-page-title">Le Ventadour<br /><em>côté Bistrot.</em></h1>
           <span className="small-rule" />
           <p>Une cuisine régionale, vivante et inventive, dessinée par le marché et servie dans la chaleur des voûtes de briques.</p>
-          <a className="button button--rust" href="#menu-bistrot">Découvrir les menus <span><ArrowIcon direction="right" size={22} /></span></a>
+          <a className="button button--rust" href="#menu-content">Découvrir les menus <span><ArrowIcon direction="right" size={22} /></span></a>
         </div>
         <div className="editorial-arch-visual">
           <div className="editorial-photo editorial-arch-photo">
@@ -113,7 +124,11 @@ export default function CarteMenusPage() {
         </div>
       </section>
 
-      {menus.map((menu, index) => <MenuTemplate menu={menu} index={index} key={`${menu.id || menu.title}-${index}`} />)}
+      <div id="menu-content" aria-live="polite">
+        {loading ? <p className="api-data-message" role="status">Chargement de la carte…</p> : null}
+        {error ? <p className="api-data-message" role="alert">La carte est momentanément indisponible. Merci de réessayer plus tard.</p> : null}
+        {!loading && !error && menus.map((menu, index) => <MenuTemplate menu={menu} index={index} key={menu.id} />)}
+      </div>
 
       <section id="notre-carte" className="a-la-carte" aria-labelledby="carte-title">
         <div className="a-la-carte-inner page-container">
@@ -122,12 +137,14 @@ export default function CarteMenusPage() {
             <h2 id="carte-title">Notre <em>Carte</em></h2>
           </div>
           <div className="a-la-carte-list">
-            {aLaCarte.map((item) => (
-              <div className="a-la-carte-item" key={item.name}>
-                <p>{item.name}</p>
-                <span>{item.price} €</span>
-              </div>
-            ))}
+            {categories.map((category) => <div className="a-la-carte-group" key={category.id}>
+              <h3>{category.title}</h3>
+              {category.items.map((item) => <div className="a-la-carte-item" key={item.id}>
+                <div><p>{item.name}</p>{item.description && <small>{item.description}</small>}</div>
+                {item.price != null && <span>{item.price} €</span>}
+              </div>)}
+            </div>)}
+            {!loading && !error && !categories.length ? <p className="api-data-message">La carte sera bientôt disponible.</p> : null}
           </div>
         </div>
       </section>
