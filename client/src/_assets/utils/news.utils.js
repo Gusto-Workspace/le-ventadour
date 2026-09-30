@@ -29,5 +29,5 @@ export function formatNewsDate(value) {
 }
 
 export function getNewsImage(item) {
-  return String(item?.image || "/img/home/plat-poisson.png");
+  return String(item?.image || "/img/home/plat-poisson.webp");
 }

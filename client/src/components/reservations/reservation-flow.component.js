@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import ArrowIcon from "@/components/_shared/arrow-icon.component";
@@ -51,6 +51,10 @@ function isClosedDate(date, today) {
   return dateKey(date) < dateKey(today);
 }
 
+function createIdempotencyKey() {
+  return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `resa_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+}
+
 export default function ReservationFlow() {
   const router = useRouter();
   const { restaurant, loading: restaurantLoading, apiUrl } = useRestaurant();
@@ -70,10 +74,14 @@ export default function ReservationFlow() {
   const [reservationStatus, setReservationStatus] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [pendingBankHold, setPendingBankHold] = useState(null);
+  const [pendingHoldDismissed, setPendingHoldDismissed] = useState(false);
   const [pendingHoldError, setPendingHoldError] = useState("");
+  const pendingHoldDialogRef = useRef(null);
+  const reservationSectionRef = useRef(null);
+  const previousStageRef = useRef({ step, submitted });
   const [confirmationLoading, setConfirmationLoading] = useState(false);
   const [confirmationError, setConfirmationError] = useState("");
-  const [idempotencyKey] = useState(() => typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `resa_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+  const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
   const reservationParameters = getReservationParameters(restaurant);
   const hasReservations = restaurant?.options?.reservations !== false;
 
@@ -112,6 +120,25 @@ export default function ReservationFlow() {
   }, [apiUrl, monthRange, restaurant?._id, restaurantLoading]);
 
   useEffect(() => { loadAvailability(); }, [loadAvailability]);
+
+  useEffect(() => {
+    const previousStage = previousStageRef.current;
+    if (previousStage.step === step && previousStage.submitted === submitted) return;
+    previousStageRef.current = { step, submitted };
+    const section = reservationSectionRef.current;
+    if (!section) return;
+    const headingTop = section.getBoundingClientRect().top + window.scrollY + parseFloat(window.getComputedStyle(section).paddingTop);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: headingTop - 28, behavior: prefersReducedMotion ? "instant" : "smooth" });
+  }, [step, submitted]);
+
+  useEffect(() => {
+    if (!pendingBankHold || pendingHoldDismissed) return undefined;
+    const dialog = pendingHoldDialogRef.current;
+    if (!dialog) return undefined;
+    dialog.showModal();
+    return () => { if (dialog.open) dialog.close(); };
+  }, [pendingBankHold, pendingHoldDismissed]);
 
   useEffect(() => {
     if (!apiUrl || !restaurant?._id) return;
@@ -213,13 +240,39 @@ export default function ReservationFlow() {
   function submitCustomer(event) {
     event.preventDefault();
     const form = event.currentTarget;
-    if (!form.checkValidity()) {
+    // Read from the submitted form as well as React state so browser autofill
+    // values are carried into the recap even when no input event was emitted.
+    const formData = new FormData(form);
+    const nextCustomer = {
+      firstName: String(formData.get("firstName") || "").trim(),
+      lastName: String(formData.get("lastName") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      commentary: String(formData.get("commentary") || "").trim(),
+    };
+    const hasRequiredValues = nextCustomer.firstName && nextCustomer.lastName && nextCustomer.email && nextCustomer.phone;
+
+    if (!form.checkValidity() || !hasRequiredValues) {
       setShowValidation(true);
       firstInvalidField()?.focus();
       return;
     }
+    setCustomer(nextCustomer);
     setShowValidation(false);
     setStep(3);
+  }
+
+  function restartReservation() {
+    setStep(1);
+    setSelectedDate(null);
+    setSelectedTime("");
+    setGuests(2);
+    setCustomer(emptyCustomer);
+    setShowValidation(false);
+    setSubmissionError("");
+    setReservationStatus("");
+    setSubmitted(false);
+    setIdempotencyKey(createIdempotencyKey());
   }
 
   async function submitReservation() {
@@ -360,7 +413,7 @@ export default function ReservationFlow() {
       const waitlisted = reservationStatus === "Waitlist";
       const title = waitlisted ? "Vous êtes sur liste d’attente." : confirmed ? "Votre table est réservée." : "Merci pour votre demande.";
       const statusText = waitlisted ? "Votre demande a été ajoutée à la liste d’attente du restaurant." : confirmed ? "Votre réservation est confirmée." : "Votre demande a bien été envoyée. Le restaurant vous confirmera votre table.";
-      return <div className="reservation-step-content reservation-confirmation-preview" role="status"><p className="eyebrow reservation-step-eyebrow">DEMANDE ENVOYÉE</p><h3>{title}</h3><p className="reservation-step-help">{statusText}</p><dl className="reservation-review-list"><div><dt>Date</dt><dd>{selectedDate ? formatDate(selectedDate, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "—"}</dd></div><div><dt>Heure</dt><dd>{selectedTime}</dd></div><div><dt>Convives</dt><dd>{guests} {guests > 1 ? "personnes" : "personne"}</dd></div></dl></div>;
+      return <div className="reservation-step-content reservation-confirmation-preview" role="status"><p className="eyebrow reservation-step-eyebrow">DEMANDE ENVOYÉE</p><h3>{title}</h3><p className="reservation-step-help">{statusText}</p><dl className="reservation-review-list"><div><dt>Date</dt><dd>{selectedDate ? formatDate(selectedDate, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "—"}</dd></div><div><dt>Heure</dt><dd>{selectedTime}</dd></div><div><dt>Convives</dt><dd>{guests} {guests > 1 ? "personnes" : "personne"}</dd></div></dl><button type="button" className="reservation-reset-link" onClick={restartReservation}>Recommencer une demande</button></div>;
     }
     if (step === 1) {
       return (
@@ -446,17 +499,15 @@ export default function ReservationFlow() {
         </dl>
         {submissionError ? <p className="reservation-form-error" role="alert">{submissionError}</p> : null}
         <div className="reservation-step-actions">
-          <button type="button" className="reservation-back-link" onClick={() => setStep(2)}><ArrowIcon direction="left" size={16} /> Modifier mes coordonnées</button>
+          <button type="button" className="reservation-back-link" onClick={() => setStep(2)}><ArrowIcon direction="left" size={16} /> Retour</button>
           <button type="button" className="button button--rust" disabled={submitting || !hasReservations} onClick={submitReservation}>{submitting ? "Envoi…" : "Confirmer la demande"} <span><ArrowIcon direction="right" size={22} /></span></button>
         </div>
-        <button type="button" className="reservation-back-link" onClick={() => setStep(1)}><ArrowIcon direction="left" size={16} /> Modifier mes disponibilités</button>
-        <button type="button" className="reservation-reset-link" onClick={() => { setStep(1); setSelectedDate(null); setSelectedTime(""); setGuests(2); setCustomer(emptyCustomer); setShowValidation(false); }}>Recommencer une demande</button>
       </div>
     );
   }
 
   return (
-    <section id="reservation" className="reservation-flow" aria-labelledby="reservation-flow-title">
+    <section ref={reservationSectionRef} id="reservation" className="reservation-flow" aria-labelledby="reservation-flow-title">
       <div className="reservation-flow-heading page-container">
         <p className="eyebrow interior-eyebrow">VOTRE RÉSERVATION</p>
         <h2 id="reservation-flow-title">Une table,<br /><em>à votre rythme.</em></h2>
@@ -464,7 +515,20 @@ export default function ReservationFlow() {
       </div>
       {confirmationLoading ? <p className="api-data-message page-container" role="status">Vérification de votre réservation…</p> : null}
       {confirmationError ? <p className="api-data-message page-container" role="alert">{confirmationError}</p> : null}
-      {pendingBankHold ? <div className="api-data-message page-container reservation-pending-hold" role="status"><p>Une validation bancaire est en attente pour votre réservation ({pendingBankHold.date ? formatDate(new Date(pendingBankHold.date), { day: "numeric", month: "long" }) : "date à confirmer"} · {pendingBankHold.time} · {pendingBankHold.guests} convives).</p><Link href={`/reservations/${pendingBankHold.reservationId}/bank-hold`}>Reprendre la validation</Link><button type="button" onClick={cancelPendingBankHold}>Annuler la réservation</button>{pendingHoldError && <p role="alert">{pendingHoldError}</p>}</div> : null}
+      {pendingBankHold && !pendingHoldDismissed ? (
+        <dialog ref={pendingHoldDialogRef} className="reservation-pending-hold" aria-labelledby="reservation-pending-hold-title" aria-describedby="reservation-pending-hold-description reservation-pending-hold-details" onClose={() => setPendingHoldDismissed(true)}>
+          <button type="button" className="reservation-pending-hold-close" aria-label="Fermer" onClick={() => setPendingHoldDismissed(true)}>×</button>
+          <p className="reservation-pending-hold-kicker">RÉSERVATION EN ATTENTE</p>
+          <h3 id="reservation-pending-hold-title">Validation bancaire en attente</h3>
+          <p id="reservation-pending-hold-description">Une validation bancaire est en attente pour votre réservation.</p>
+          <p id="reservation-pending-hold-details" className="reservation-pending-hold-details">{pendingBankHold.date ? formatDate(new Date(pendingBankHold.date), { day: "numeric", month: "long" }) : "date à confirmer"} · {pendingBankHold.time} · {pendingBankHold.guests} convives</p>
+          {pendingHoldError && <p className="reservation-form-error" role="alert">{pendingHoldError}</p>}
+          <div className="reservation-pending-hold-actions">
+            <Link className="button button--rust" href={`/reservations/${pendingBankHold.reservationId}/bank-hold`}>Reprendre la validation <span><ArrowIcon direction="right" size={20} /></span></Link>
+            <button type="button" className="reservation-back-link" onClick={cancelPendingBankHold}>Annuler la réservation</button>
+          </div>
+        </dialog>
+      ) : null}
       {!restaurantLoading && restaurant && !hasReservations ? <p className="api-data-message page-container" role="status">La réservation en ligne n’est pas disponible actuellement. Contactez directement le restaurant.</p> : null}
       <div className="reservation-flow-layout page-container">
         <nav className="reservation-progress" aria-label="Étapes de réservation">

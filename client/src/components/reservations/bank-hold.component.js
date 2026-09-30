@@ -75,8 +75,7 @@ function BankHoldForm({ apiUrl, reservationId, data }) {
     {Number(data.amountTotal) > 0 && <p className="reservation-step-help">Montant de la garantie : {Number(data.amountTotal).toFixed(2)} €</p>}
     <div className="reservation-payment-element"><PaymentElement options={{ wallets: { link: "never" } }} /></div>
     {error && <p className="reservation-form-error" role="alert">{error}</p>}
-    <div className="reservation-step-actions"><button className="button button--rust" type="submit" disabled={!stripe || !elements || busy}>{busy ? "Validation…" : "Valider la carte"}</button></div>
-    <p className="reservation-step-help">Paiement sécurisé par Stripe. Vos données bancaires ne transitent pas par le restaurant.</p>
+    <div className="reservation-step-actions"><button className="nav-booking" type="submit" disabled={!stripe || !elements || busy}>{busy ? "Validation…" : "Valider la carte"}</button></div>
   </form>;
 }
 

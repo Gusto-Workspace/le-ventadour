@@ -28,7 +28,7 @@ export default function ContactPage() {
             <h2 id="contact-details-title">Parlons-<em>en.</em></h2>
             <span className="small-rule" />
             <p>Une question, une réservation, un événement à imaginer ? Notre équipe est à votre écoute et se fera un plaisir de vous répondre.</p>
-            <EditorialPhoto className="contact-details-photo" src="/img/contact/contact-photo.png" alt="Une table dressée dans la salle du Ventadour" sizes="(max-width: 900px) 90vw, 32vw" />
+            <EditorialPhoto className="contact-details-photo" src="/img/contact/contact-photo.webp" alt="Une table dressée dans la salle du Ventadour" sizes="(max-width: 900px) 90vw, 32vw" />
           </div>
 
           <div className="contact-detail-list" aria-label="Coordonnées du Ventadour">

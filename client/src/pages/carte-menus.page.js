@@ -18,7 +18,7 @@ function MenuTemplateSections({ sections, showAllergens = false }) {
             <h3>{section.title}</h3>
             {section.price != null && <span className="menu-template-course-price">{section.price} €</span>}
           </div>
-          <div className="menu-template-course-items">
+          {section.items.length > 0 && <div className="menu-template-course-items">
             {section.items.map((item, itemIndex) => (
               <Fragment key={item.id || `${item.name || item}-${itemIndex}`}>
               <div className={`menu-template-item${item.relationAfter ? " menu-template-item--relation" : ""}`}>
@@ -30,7 +30,7 @@ function MenuTemplateSections({ sections, showAllergens = false }) {
               {item.relationAfter && <p className="menu-template-relation">{item.relationAfter}</p>}
               </Fragment>
             ))}
-          </div>
+          </div>}
         </div>
       ))}
     </div>
@@ -41,9 +41,11 @@ function MenuTemplate({ menu, index }) {
   const menuName = menu.title.replace(/^menu\s+/i, "").trim();
   const menuId = menu.id || `menu-${index + 1}`;
   const imageSrc = menu.image?.startsWith("/") ? menu.image : menu.image ? homeAsset(menu.image) : null;
+  const pricedOptions = menu.sections.length > 0 && menu.sections.every((section) => section.price != null);
+  const descriptionOnly = Boolean(menu.description) && menu.sections.length === 0;
 
   return (
-    <section id={menuId} className={`printed-menu menu-template${index % 2 === 1 ? " menu-template--white" : ""}`} aria-labelledby={`${menuId}-title`}>
+    <section id={menuId} className={`printed-menu menu-template${index % 2 === 1 ? " menu-template--white" : ""}${pricedOptions ? " menu-template--priced-options" : ""}${descriptionOnly ? " menu-template--description-only" : ""}`} aria-labelledby={`${menuId}-title`}>
       <div className="printed-menu-inner menu-template-inner page-container">
         <div className="printed-menu-editorial menu-template-editorial">
           <div className="printed-menu-heading menu-template-heading">
@@ -61,9 +63,9 @@ function MenuTemplate({ menu, index }) {
             </div>
           )}
         </div>
-        <div className="menu-template-content">
+        {menu.sections.length > 0 && <div className="menu-template-content">
           <MenuTemplateSections sections={menu.sections} showAllergens={menu.showAllergens} />
-        </div>
+        </div>}
       </div>
       <Image src={homeAsset("feuille-section-cuisine")} alt="" width={480} height={480} className="printed-menu-leaf" aria-hidden="true" />
       {menu.price != null && <span className="printed-menu-number" aria-hidden="true">{menu.price}</span>}
@@ -87,13 +89,13 @@ export default function CarteMenusPage() {
         </div>
         <div className="editorial-arch-visual">
           <div className="editorial-photo editorial-arch-photo">
-            <Image src="/img/carte-menus/hero-photo.png" alt="Une assiette de saison dans la salle du Ventadour" fill priority sizes="(max-width: 900px) 92vw, (max-width: 1250px) 46vw, 43vw" />
+            <Image src="/img/carte-menus/hero-photo.webp" alt="Une assiette de saison dans la salle du Ventadour" fill priority sizes="(max-width: 900px) 92vw, (max-width: 1250px) 46vw, 43vw" />
           </div>
           <span className="editorial-arch-leaves" aria-hidden="true">
-            <Image src="/img/carte-menus/hero-leaves.png" alt="" fill sizes="(max-width: 600px) 28vw, 18vw" />
+            <Image src="/img/carte-menus/hero-leaves.webp" alt="" fill sizes="(max-width: 600px) 28vw, 18vw" />
           </span>
           <span className="editorial-arch-badge" aria-hidden="true">
-            <Image src="/img/carte-menus/hero-badge.png" alt="" fill sizes="(max-width: 600px) 24vw, 13vw" />
+            <Image src="/img/carte-menus/hero-badge.webp" alt="" fill sizes="(max-width: 600px) 24vw, 13vw" />
           </span>
         </div>
       </section>

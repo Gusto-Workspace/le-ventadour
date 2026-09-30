@@ -130,6 +130,9 @@ export function normalizeMenus(restaurant) {
   return (Array.isArray(restaurant?.menus) ? restaurant.menus : [])
     .filter((menu) => menu && menu.visible !== false)
     .map((menu, index) => {
+      const menuName = text(menu.name);
+      const isLunchMenu = /formule du midi/i.test(menuName);
+      const isHolidayMenu = /r[eé]veillon/i.test(menuName);
       const customGroups = Array.isArray(menu.customGroups) ? menu.customGroups : [];
       const combinations = Array.isArray(menu.combinations) ? menu.combinations : [];
       const sections = menu.type === "custom"
@@ -158,12 +161,12 @@ export function normalizeMenus(restaurant) {
 
       return {
         id: String(menu._id || `menu-${index + 1}`),
-        title: text(menu.name) || `Menu ${index + 1}`,
+        title: menuName || `Menu ${index + 1}`,
         description: text(menu.description),
         price: Number(menu.price) > 0 ? Number(menu.price) : null,
         sections,
-        image: visualKeys[index] || visualKeys[0],
-        imageAlt: "Une proposition de saison du Ventadour",
+        image: isLunchMenu ? "/img/carte-menus/formule-midi.webp" : isHolidayMenu ? "/img/carte-menus/reveillon.webp" : visualKeys[index] || visualKeys[0],
+        imageAlt: isLunchMenu ? "Saint-Jacques et garniture de saison" : isHolidayMenu ? "Plat de fête du Ventadour" : "Une proposition de saison du Ventadour",
         imageLabel: index === 0 ? "DES PRODUITS DE SAISON" : "LE GOÛT DU FAIT MAISON",
         showAllergens: false,
       };

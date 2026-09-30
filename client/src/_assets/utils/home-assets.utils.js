@@ -1,1 +1,1 @@
-export const homeAsset = (name) => `/img/home/${name}.png`;
+export const homeAsset = (name) => `/img/home/${name}.webp`;

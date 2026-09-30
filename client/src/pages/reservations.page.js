@@ -9,7 +9,7 @@ export default function ReservationsPage() {
     <InteriorLayout title="Réserver" description="Réserver une table au Ventadour, restaurant à Montauban.">
       <section className="reservation-hero" aria-labelledby="booking-title">
         <div className="reservation-hero-image" aria-hidden="true">
-          <Image src="/img/reservations/bg-hero-resa.png" alt="" fill priority sizes="100vw" />
+          <Image src="/img/reservations/bg-hero-resa.webp" alt="" fill priority sizes="100vw" />
         </div>
         <div className="reservation-hero-copy page-container">
           <p className="eyebrow interior-eyebrow">RÉSERVER UNE TABLE</p>
