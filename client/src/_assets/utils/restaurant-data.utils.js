@@ -1,4 +1,18 @@
 const weekdayNames = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+const menuImageCycle = [
+  {
+    image: "/img/carte-menus/formule-midi.webp",
+    imageAlt: "Noix de Saint-Jacques et garniture de saison",
+  },
+  {
+    image: "/img/carte-menus/reveillon.webp",
+    imageAlt: "Foie gras et garniture de fête",
+  },
+  {
+    image: "/img/home/plat-saison.webp",
+    imageAlt: "Plat cuisiné de saison",
+  },
+];
 
 function text(value) {
   return String(value || "").trim();
@@ -126,13 +140,11 @@ function splitDescription(value) {
 }
 
 export function normalizeMenus(restaurant) {
-  const visualKeys = ["plat-poisson", "dessert"];
   return (Array.isArray(restaurant?.menus) ? restaurant.menus : [])
     .filter((menu) => menu && menu.visible !== false)
     .map((menu, index) => {
       const menuName = text(menu.name);
-      const isLunchMenu = /formule du midi/i.test(menuName);
-      const isHolidayMenu = /r[eé]veillon/i.test(menuName);
+      const menuVisual = menuImageCycle[index % menuImageCycle.length];
       const customGroups = Array.isArray(menu.customGroups) ? menu.customGroups : [];
       const combinations = Array.isArray(menu.combinations) ? menu.combinations : [];
       const sections = menu.type === "custom"
@@ -165,8 +177,8 @@ export function normalizeMenus(restaurant) {
         description: text(menu.description),
         price: Number(menu.price) > 0 ? Number(menu.price) : null,
         sections,
-        image: isLunchMenu ? "/img/carte-menus/formule-midi.webp" : isHolidayMenu ? "/img/carte-menus/reveillon.webp" : visualKeys[index] || visualKeys[0],
-        imageAlt: isLunchMenu ? "Saint-Jacques et garniture de saison" : isHolidayMenu ? "Plat de fête du Ventadour" : "Une proposition de saison du Ventadour",
+        image: menuVisual.image,
+        imageAlt: menuVisual.imageAlt,
         imageLabel: index === 0 ? "DES PRODUITS DE SAISON" : "LE GOÛT DU FAIT MAISON",
         showAllergens: false,
       };

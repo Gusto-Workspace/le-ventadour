@@ -40,13 +40,13 @@ export default function TraiteurPage() {
       <section id="mariage" className="wedding-section" aria-labelledby="wedding-title">
         <div className="wedding-section-inner page-container">
           <div className="wedding-section-heading"><p className="eyebrow eyebrow--light">02 / MARIAGE</p><h2 id="wedding-title">Votre histoire,<br /><em>notre savoir-faire.</em></h2><p>Le cocktail, les ateliers, le repas et le service se construisent avec vous. Le Ventadour adapte sa formule à votre lieu, au nombre de convives et au déroulement de la journée.</p><Link href="#devis" className="button button--white">Demander une proposition <span><ArrowIcon size={22} /></span></Link></div>
-          <EditorialPhoto className="wedding-section-photo" label="Photo mariage" />
+          <EditorialPhoto className="wedding-section-photo" src={homeAsset("traiteur-mariage-simple")} alt="Table sobrement dressée pour une réception de mariage au Ventadour" sizes="(max-width: 900px) 90vw, 32vw" />
           <div className="wedding-moments">{weddingMoments.map((moment) => <div key={moment.number}><span>{moment.number}</span><h3>{moment.title}</h3><p>{moment.detail}</p></div>)}</div>
         </div>
       </section>
 
       <section id="professionnels" className="professionals-section page-container" aria-labelledby="professionals-title">
-        <EditorialPhoto className="professionals-photo" label="Photo événement professionnel" />
+        <EditorialPhoto className="professionals-photo" src={homeAsset("traiteur-buffet")} alt="Buffet traiteur composé de pièces salées au Ventadour" sizes="(max-width: 900px) 90vw, 38vw" />
         <div className="professionals-copy"><p className="eyebrow interior-eyebrow">03 / ENTREPRISES</p><h2 id="professionals-title">Des rencontres<br /><em>qui comptent.</em></h2><p>À domicile ou en entreprise, avec ou sans service, David Aranda étudie vos demandes en fonction de votre budget et de votre événement.</p><ul className="editorial-list">{professionalEvents.map((event) => <li key={event}>{event}</li>)}</ul><a href="#devis" className="text-link">Nous confier votre événement</a></div>
       </section>
 
