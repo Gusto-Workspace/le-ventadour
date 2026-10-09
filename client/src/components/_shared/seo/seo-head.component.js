@@ -2,7 +2,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRestaurant } from "@/contexts/restaurant.context";
 import {
-  DEFAULT_LOGO_IMAGE,
   DEFAULT_SITE_NAME,
   DEFAULT_SOCIAL_IMAGE,
   buildAbsoluteUrl,
@@ -51,7 +50,6 @@ export default function SeoHead({
       <meta name="apple-mobile-web-app-title" content={DEFAULT_SITE_NAME} />
       <meta name="theme-color" content="#8b4d3d" />
       <meta name="format-detection" content="telephone=yes, address=yes, email=yes" />
-      <link rel="icon" href={DEFAULT_LOGO_IMAGE} />
       {!noIndex ? <link rel="canonical" href={canonicalUrl} /> : null}
       {!noIndex ? <link rel="alternate" hrefLang="fr-FR" href={canonicalUrl} /> : null}
       {!noIndex ? <link rel="alternate" hrefLang="x-default" href={canonicalUrl} /> : null}
