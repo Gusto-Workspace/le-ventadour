@@ -6,7 +6,7 @@ export default function ReservationBankHoldPage() {
   const router = useRouter();
   const reservationId = router.query.reservationId;
   return (
-    <InteriorLayout title="Validation bancaire" description="Finaliser la validation sécurisée de votre réservation au Ventadour.">
+    <InteriorLayout title="Validation bancaire" description="Finaliser la validation sécurisée de votre réservation au Ventadour." noIndex>
       <section className="reservation-bank-page page-container" aria-labelledby="reservation-bank-title">
         <p className="eyebrow interior-eyebrow">RÉSERVATION</p>
         <h1 id="reservation-bank-title">Validation de <em>votre carte.</em></h1>
