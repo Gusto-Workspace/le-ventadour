@@ -9,7 +9,7 @@ export default function CuisineHomeSection() {
       <div className="cuisine-inner page-container">
         <p className="cuisine-side-note">DES PRODUITS<br />DE SAISON,<br />TOUJOURS<span /></p>
         <div className="cuisine-fish"><Image src="/img/home/plat-saison.webp" alt="Plat de saison du Ventadour" fill sizes="(max-width: 760px) 90vw, 34vw" /></div>
-        <div className="cuisine-copy"><p className="eyebrow eyebrow--line">LE GOÛT DU MARCHÉ</p><h2 id="cuisine-title">Une cuisine<br /><em>vraie et<br />inventive.</em></h2><p>Chaque semaine, notre menu évolue au rythme du marché. Des produits frais, une cuisine de saison, des assiettes précises et généreuses.</p><Link href="/carte-menus" className="button button--dark">Voir la carte & menus <span><ArrowIcon size={22} /></span></Link></div>
+        <div className="cuisine-copy"><p className="eyebrow eyebrow--line">LE GOÛT DU MARCHÉ</p><h2 id="cuisine-title">Une cuisine<br /><em>vraie et<br />inventive.</em></h2><p>Chaque semaine, notre menu évolue au rythme du marché. Des produits frais, une cuisine de saison, des assiettes précises et généreuses.</p><Link href="/menus" className="button button--dark">Voir la carte & menus <span><ArrowIcon size={22} /></span></Link></div>
         <div className="cuisine-dessert"><Image src="/img/home/dessert-framboises.webp" alt="Macaron aux framboises" fill sizes="(max-width: 760px) 55vw, 18vw" /></div>
         <blockquote>“Le plaisir<br />des belles choses<br />simplement.”<span /></blockquote>
         <Image src={homeAsset("feuille-section-cuisine")} alt="" width={480} height={480} className="cuisine-leaf" aria-hidden="true" />

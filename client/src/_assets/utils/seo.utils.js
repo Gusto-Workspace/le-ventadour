@@ -30,7 +30,7 @@ export function buildAbsoluteUrl(baseUrl, path = "") {
 export function getSeoRouteEntries(baseUrl) {
   return [
     { path: "/", priority: "1.0", changefreq: "weekly" },
-    { path: "/carte-menus", priority: "0.9", changefreq: "weekly" },
+    { path: "/menus", priority: "0.9", changefreq: "weekly" },
     { path: "/reservations", priority: "0.9", changefreq: "weekly" },
     { path: "/traiteur", priority: "0.8", changefreq: "monthly" },
     { path: "/contact", priority: "0.8", changefreq: "monthly" },
@@ -123,7 +123,7 @@ export function buildSeoSchemas({ baseUrl, title, description, canonicalUrl, ima
       name: DEFAULT_SITE_NAME, url: baseUrl, image: imageUrl,
       logo: buildAbsoluteUrl(baseUrl, DEFAULT_LOGO_IMAGE),
       servesCuisine: ["Cuisine française", "Cuisine de saison", "Traiteur"],
-      acceptsReservations: true, menu: buildAbsoluteUrl(baseUrl, "/carte-menus"),
+      acceptsReservations: true, menu: buildAbsoluteUrl(baseUrl, "/menus"),
       telephone: phone, email, address, openingHoursSpecification: getOpeningHours(restaurant?.opening_hours),
       hasMap: addressQuery ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressQuery)}` : undefined,
       currenciesAccepted: "EUR", sameAs: socialLinks, mainEntityOfPage: canonicalUrl,

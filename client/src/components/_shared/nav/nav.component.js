@@ -11,7 +11,7 @@ let hasResolvedInitialNavCheck = false;
 const nav = [
   ["Accueil", "/"],
   ["Traiteur", "/traiteur"],
-  ["Carte & Menus", "/carte-menus"],
+  ["Carte & Menus", "/menus"],
   ["Actualités", "/news"],
   ["Contact", "/contact"],
 ];
