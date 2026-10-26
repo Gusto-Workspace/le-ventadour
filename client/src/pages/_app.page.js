@@ -1,4 +1,5 @@
 import "@/styles/style.scss";
+import "@/styles/gusto-print.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { RestaurantProvider } from "@/contexts/restaurant.context";

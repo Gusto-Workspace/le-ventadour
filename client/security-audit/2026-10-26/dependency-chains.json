@@ -1,0 +1,31 @@
+{
+  "next": [
+    {
+      "node": "node_modules/next",
+      "chain": [
+        "next@14.2.35"
+      ],
+      "production": true
+    }
+  ],
+  "postcss": [
+    {
+      "node": "node_modules/postcss",
+      "chain": [
+        "next@14.2.35",
+        "postcss@8.4.31"
+      ],
+      "production": true
+    }
+  ],
+  "source-map-js": [
+    {
+      "node": "node_modules/source-map-js",
+      "chain": [
+        "sass@1.79.5",
+        "source-map-js@1.2.1"
+      ],
+      "production": true
+    }
+  ]
+}

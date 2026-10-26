@@ -19,5 +19,10 @@
   },
   "devDependencies": {
     "sass": "1.79.5"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.31"
+    }
   }
 }

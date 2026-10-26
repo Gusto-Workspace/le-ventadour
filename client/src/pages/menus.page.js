@@ -7,6 +7,7 @@ import EditorialPhoto from "@/components/_shared/interior/editorial-photo.compon
 import { homeAsset } from "@/_assets/utils/home-assets.utils";
 import { useRestaurant } from "@/contexts/restaurant.context";
 import { normalizeDishCategories, normalizeMenus } from "@/_assets/utils/restaurant-data.utils";
+import GustoPrint, { useGustoPrintMode } from "@/components/_shared/gusto-print.component";
 
 function MenuTemplateSections({ sections, showAllergens = false }) {
   return (
@@ -37,9 +38,9 @@ function MenuTemplateSections({ sections, showAllergens = false }) {
   );
 }
 
-function MenuTemplate({ menu, index }) {
+function MenuTemplate({ menu, index, printMode = false }) {
   const menuName = menu.title.replace(/^menu\s+/i, "").trim();
-  const menuId = menu.id || `menu-${index + 1}`;
+  const menuId = `${printMode ? "print-" : ""}${menu.id || `menu-${index + 1}`}`;
   const imageSrc = menu.image?.startsWith("/") ? menu.image : menu.image ? homeAsset(menu.image) : null;
   const pricedOptions = menu.sections.length > 0 && menu.sections.every((section) => section.price != null);
   const descriptionOnly = Boolean(menu.description) && menu.sections.length === 0;
@@ -55,7 +56,7 @@ function MenuTemplate({ menu, index }) {
             {menu.description && <><span className="small-rule" /><p className="printed-menu-description">{menu.description}</p></>}
             {menu.notes?.length > 0 && <div className="printed-menu-notes">{menu.notes.map((note, noteIndex) => <p key={note.id || noteIndex}>{note.text || note}</p>)}</div>}
           </div>
-          {imageSrc && (
+          {!printMode && imageSrc && (
             <div className="printed-menu-photo-wrap">
               <span className="printed-menu-photo-backdrop" aria-hidden="true" />
               <EditorialPhoto className="printed-menu-photo" src={imageSrc} alt={menu.imageAlt || ""} sizes="(max-width: 1000px) 82vw, 32vw" />
@@ -67,8 +68,8 @@ function MenuTemplate({ menu, index }) {
           <MenuTemplateSections sections={menu.sections} showAllergens={menu.showAllergens} />
         </div>}
       </div>
-      <Image src={homeAsset("feuille-section-cuisine")} alt="" width={480} height={480} className="printed-menu-leaf" aria-hidden="true" />
-      {menu.price != null && <span className="printed-menu-number" aria-hidden="true">{menu.price}</span>}
+      {!printMode && <Image src={homeAsset("feuille-section-cuisine")} alt="" width={480} height={480} className="printed-menu-leaf" aria-hidden="true" />}
+      {!printMode && menu.price != null && <span className="printed-menu-number" aria-hidden="true">{menu.price}</span>}
     </section>
   );
 }
@@ -77,7 +78,18 @@ export default function CarteMenusPage() {
   const { restaurant, loading, error } = useRestaurant();
   const menus = normalizeMenus(restaurant);
   const categories = normalizeDishCategories(restaurant);
+  const { printMode, autoPrint } = useGustoPrintMode();
+  const printedCard = <GustoPrint printMode={printMode} autoPrint={autoPrint} loading={loading} error={error} hasContent={Boolean(restaurant && (menus.length || categories.length))} title="Le Ventadour">
+    {menus.map((menu, index) => <MenuTemplate menu={menu} index={index} key={menu.id} printMode />)}
+    {categories.length > 0 && <section className={`gusto-print-carte${menus.length ? " gusto-print-new-page" : ""}`}>
+      <div className="gusto-print-carte-heading"><p className="eyebrow">À LA CARTE</p><h2>Notre <em>Carte</em></h2></div>
+      <CarteCategories categories={categories} printMode />
+    </section>}
+  </GustoPrint>;
+  if (printMode) return printedCard;
   return (
+    <>
+    {printedCard}
     <InteriorLayout title="Carte & Menus" description="Découvrez les menus et la carte de saison du Ventadour à Montauban.">
       <section className="inside-intro inside-intro--menu page-container" aria-labelledby="menu-page-title">
         <div className="inside-intro-copy">
@@ -137,13 +149,7 @@ export default function CarteMenusPage() {
             <h2 id="carte-title">Notre <em>Carte</em></h2>
           </div>
           <div className="a-la-carte-list">
-            {categories.map((category) => <div className="a-la-carte-group" key={category.id}>
-              <h3>{category.title}</h3>
-              {category.items.map((item) => <div className="a-la-carte-item" key={item.id}>
-                <div><p>{item.name}</p>{item.description && <small>{item.description}</small>}</div>
-                {item.price != null && <span>{item.price} €</span>}
-              </div>)}
-            </div>)}
+            <CarteCategories categories={categories} />
             {!loading && !error && !categories.length ? <p className="api-data-message">La carte sera bientôt disponible.</p> : null}
           </div>
         </div>
@@ -156,5 +162,17 @@ export default function CarteMenusPage() {
         </div>
       </section>
     </InteriorLayout>
+    </>
   );
+}
+
+function CarteCategories({ categories, printMode = false }) {
+  return categories.map((category) => <div className="a-la-carte-group" key={category.id}>
+    <h3>{category.title}</h3>
+    {printMode && category.description && <p>{category.description}</p>}
+    {category.items.map((item) => <div className="a-la-carte-item" key={item.id}>
+      <div><p>{item.name}</p>{item.description && <small>{item.description}</small>}</div>
+      {item.price != null && <span>{item.price} €</span>}
+    </div>)}
+  </div>);
 }

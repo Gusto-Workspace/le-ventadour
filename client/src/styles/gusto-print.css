@@ -1,0 +1,241 @@
+/* Ventadour: editorial serif, rust italics and numbered courses from the site.
+   Scoped to the existing print document, including Ctrl/Cmd+P. */
+.gusto-print-mode {
+  display: none;
+  color: var(--ink);
+  background: var(--cream);
+  font: 300 9.5pt/1.5 var(--sans);
+  overflow-wrap: anywhere;
+}
+.gusto-print-mode.gusto-print-preview { display: block; }
+.gusto-print-mode * {
+  box-sizing: border-box;
+  min-width: 0;
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  clip-path: none !important;
+}
+.gusto-print-mode :is(h1, h2, h3, p) { margin: 0; }
+.gusto-print-mode :is(h1, h2, h3) { font-weight: 300; }
+.gusto-print-mode p { white-space: pre-line; }
+.gusto-print-mode :is(h1, h2) { font-family: var(--serif); letter-spacing: -0.045em; }
+.gusto-print-mode :is(h1, h2) em { color: var(--rust); font-style: italic; }
+.gusto-print-mode .eyebrow {
+  color: var(--rust);
+  font: 400 7pt/1.5 var(--sans);
+  letter-spacing: 0.24em;
+}
+.gusto-print-mode .gusto-print-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10mm;
+  padding: 0 0 7mm;
+  margin-bottom: 7mm;
+  border-bottom: 0.35mm solid var(--rust);
+}
+.gusto-print-mode h1 { margin-top: 3mm; font-size: 35pt; line-height: 0.96; }
+.gusto-print-mode h1 em { display: block; margin-top: 1mm; font-size: 29pt; }
+.gusto-print-mode .gusto-print-botanical {
+  flex: 0 0 28mm;
+  width: 28mm;
+  height: 33mm;
+  padding: 3mm;
+  object-fit: contain;
+  border: 0.25mm solid #aa877a;
+  border-radius: 50% 50% 0 0;
+}
+.gusto-print-mode .printed-menu {
+  position: static;
+  overflow: visible;
+  padding: 7mm 6mm;
+  margin-bottom: 6mm;
+  background: var(--paper);
+  border-top: 0.25mm solid #aa877a;
+  border-bottom: 0.25mm solid #aa877a;
+  break-inside: auto;
+}
+.gusto-print-mode .menu-template--white { background: #fffdf9; }
+.gusto-print-mode .printed-menu-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
+  gap: 8mm;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  position: static;
+  align-items: start;
+}
+.gusto-print-mode :is(.printed-menu-editorial, .menu-template-heading) {
+  display: block;
+  position: static;
+  width: auto;
+  margin: 0;
+}
+.gusto-print-mode .printed-menu-heading h2 { margin: 0; font-size: 27pt; line-height: 0.98; }
+.gusto-print-mode .printed-menu-heading h2 :is(span, em) { display: block; }
+.gusto-print-mode .printed-menu-heading .menu-formula-price {
+  margin: 4mm 0 0;
+  font: 300 23pt/1 var(--serif);
+  color: var(--rust);
+}
+.gusto-print-mode .small-rule {
+  display: block;
+  width: 15mm;
+  height: 0;
+  border-top: 0.25mm solid var(--rust);
+  margin: 4mm 0 3mm;
+  background: none;
+}
+.gusto-print-mode .printed-menu-description {
+  max-width: none;
+  color: #62584f;
+  font: 300 11pt/1.45 var(--serif);
+}
+.gusto-print-mode .printed-menu-notes { margin-top: 3mm; }
+.gusto-print-mode .printed-menu-notes p { font-size: 8.5pt; line-height: 1.5; }
+.gusto-print-mode :is(.menu-template-content, .menu-template-sections) {
+  display: block;
+  min-height: 0;
+  position: static;
+  align-self: start;
+}
+.gusto-print-mode .menu-template-course {
+  display: block;
+  margin: 0 0 5mm;
+  padding: 0;
+  border: 0;
+  break-inside: avoid;
+}
+.gusto-print-mode .menu-template-course:last-child { margin-bottom: 0; }
+.gusto-print-mode .menu-template-course-heading {
+  display: grid;
+  grid-template-columns: 11mm minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2mm;
+  margin-bottom: 2mm;
+}
+.gusto-print-mode .menu-template-course-index {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  color: var(--rust);
+  font: 400 7pt/1 var(--sans);
+  letter-spacing: 0.12em;
+}
+.gusto-print-mode .menu-template-course-index i {
+  width: 4mm;
+  height: 0;
+  border-top: 0.25mm solid currentColor;
+  background: none;
+}
+.gusto-print-mode .menu-template-course-heading h3 {
+  margin: 0;
+  font: 300 16pt/1.15 var(--serif);
+  white-space: normal;
+}
+.gusto-print-mode .menu-template-course-price {
+  margin: 0;
+  color: var(--rust);
+  font: 300 13pt/1.2 var(--serif);
+  white-space: nowrap;
+}
+.gusto-print-mode .menu-template-course-items { margin: 0 0 0 13mm; }
+.gusto-print-mode .menu-template-item { display: block; padding: 2mm 0; }
+.gusto-print-mode .menu-template-item + .menu-template-item {
+  padding-top: 2mm;
+  border-top: 0.2mm solid #d7c6bc;
+}
+.gusto-print-mode .menu-template-item p { font: 300 11.5pt/1.35 var(--serif); }
+.gusto-print-mode .menu-template-item small {
+  display: block;
+  margin-top: 1mm;
+  color: #62584f;
+  font: 300 8.5pt/1.5 var(--sans);
+  white-space: pre-line;
+}
+.gusto-print-mode .menu-template-relation {
+  margin: 1mm 0;
+  color: var(--rust);
+  font: italic 10pt/1.2 var(--serif);
+  text-align: center;
+}
+.gusto-print-mode .menu-template-item--relation { break-after: avoid; }
+.gusto-print-mode .menu-template--description-only .printed-menu-inner { display: block; }
+.gusto-print-mode .menu-template--description-only .printed-menu-heading h2 :is(span, em) { display: inline; }
+.gusto-print-mode .menu-template--description-only .printed-menu-heading h2 em { margin-left: 0.15em; }
+.gusto-print-mode .gusto-print-carte-heading { margin-bottom: 7mm; }
+.gusto-print-mode .gusto-print-carte-heading h2 { margin-top: 2mm; font-size: 32pt; line-height: 1; }
+.gusto-print-mode .a-la-carte-group { margin: 0 0 6mm; }
+.gusto-print-mode .a-la-carte-group + .a-la-carte-group { margin-top: 0; }
+.gusto-print-mode .a-la-carte-group > h3 {
+  margin: 0 0 3mm;
+  color: var(--rust);
+  font: 400 8pt/1.5 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.gusto-print-mode .a-la-carte-group > p { margin-bottom: 3mm; color: #62584f; }
+.gusto-print-mode .a-la-carte-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 7mm;
+  padding: 2.5mm 0;
+  border-top: 0.2mm solid #aa877a;
+}
+.gusto-print-mode .a-la-carte-item p { font: 300 13pt/1.15 var(--serif); }
+.gusto-print-mode .a-la-carte-item small {
+  display: block;
+  margin-top: 1mm;
+  color: #62584f;
+  font: 300 9pt/1.45 var(--sans);
+  white-space: pre-line;
+}
+.gusto-print-mode .a-la-carte-item > span {
+  color: var(--rust);
+  font: 300 13pt/1.2 var(--serif);
+  white-space: nowrap;
+}
+.gusto-print-mode .gusto-print-toolbar { margin-bottom: 6mm; }
+.gusto-print-mode button { padding: 2mm 5mm; border: 1px solid var(--rust); background: none; color: var(--rust); }
+.gusto-print-mode button:disabled { opacity: 0.5; }
+@media screen {
+  .gusto-print-mode.gusto-print-preview {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 24px auto;
+    padding: 14mm 15mm 17mm;
+    box-shadow: 0 2px 20px #0002;
+  }
+}
+@media print {
+  @page gusto-ventadour {
+    size: A4 portrait;
+    margin: 14mm 15mm 17mm;
+    @bottom-left { content: "LE VENTADOUR / CARTE & MENUS"; color: #934535; font: 7pt "Helvetica Neue", Arial, sans-serif; letter-spacing: 0.12em; }
+    @bottom-right { content: counter(page); color: #934535; font: 10pt Didot, serif; }
+  }
+  html:has(.gusto-print-mode), body:has(.gusto-print-mode) {
+    page: gusto-ventadour;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--cream);
+  }
+  #__next:has(> .gusto-print-mode) > :not(.gusto-print-mode) { display: none !important; }
+  .gusto-print-mode { display: block !important; page: gusto-ventadour; }
+  .gusto-print-mode [data-gusto-no-print] { display: none !important; }
+  .gusto-print-mode .gusto-print-new-page { break-before: page; }
+  .gusto-print-mode :is(h1, h2, h3, .gusto-print-masthead, .gusto-print-carte-heading, .printed-menu-heading, .menu-template-course-heading) { break-after: avoid; }
+  .gusto-print-mode :is(.gusto-print-masthead, .a-la-carte-item, .menu-template-item) { break-inside: avoid; }
+  .gusto-print-mode :is(.menu-template-relation, .a-la-carte-group > p) { break-before: avoid; break-after: avoid; }
+  .gusto-print-mode p { orphans: 3; widows: 3; }
+}
